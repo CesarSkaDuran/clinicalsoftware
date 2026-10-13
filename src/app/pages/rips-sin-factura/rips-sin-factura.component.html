@@ -1,0 +1,263 @@
+<vex-page-layout>
+  <div class="home-card page-heading">
+    <h1 class="display-1 font-medium">RIPS sin factura</h1>
+    <p class="text-secondary">Captura de atenciones y generación de un archivo JSON para cargar en el módulo oficial RIPS sin Factura.</p>
+  </div>
+
+  <vex-page-layout-content fxLayout="column">
+    <div class="notice-card">
+      <strong>Versión inicial: generación local</strong>
+      <p>Este módulo no transmite datos al Ministerio ni guarda borradores en el servidor. El consecutivo de nota debe ser único y mantenerse bajo control del prestador. Verifica la elegibilidad para reportar RIPS sin factura y valida el archivo en el Mecanismo Único de Validación.</p>
+      <p>Los códigos de catálogos se capturan manualmente; el formulario comprueba campos requeridos, pero no confirma que CUPS, diagnósticos, sedes o valores estén vigentes en las tablas oficiales.</p>
+    </div>
+
+    <form class="home-card rips-form" [formGroup]="form" (ngSubmit)="generateJson()">
+      <section class="section-block">
+        <div class="section-title">
+          <div>
+            <h2>Datos del reporte</h2>
+            <p>Para RIPS sin factura, el tipo de nota debe ser RS.</p>
+          </div>
+          <span class="badge">Sin FEV</span>
+        </div>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Número de identificación del obligado</mat-label>
+            <input matInput formControlName="numDocumentoIdObligado" maxlength="12" autocomplete="off">
+            <mat-error *ngIf="form.get('numDocumentoIdObligado').hasError('required')">Campo obligatorio</mat-error>
+            <mat-error *ngIf="form.get('numDocumentoIdObligado').hasError('maxlength')">Máximo 12 caracteres</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Consecutivo numNota</mat-label>
+            <input matInput formControlName="numNota" maxlength="30" autocomplete="off">
+            <mat-hint>Debe ser único y consecutivo para el prestador</mat-hint>
+            <mat-error *ngIf="form.get('numNota').hasError('required')">Campo obligatorio</mat-error>
+          </mat-form-field>
+        </div>
+      </section>
+
+      <div formArrayName="usuarios">
+        <section class="section-block user-block" *ngFor="let user of users.controls; let userIndex = index" [formGroupName]="userIndex">
+          <div class="section-title">
+            <div>
+              <h2>Usuario {{ userIndex + 1 }}</h2>
+              <p>Identificación y residencia de la persona atendida.</p>
+            </div>
+            <button mat-stroked-button color="warn" type="button" (click)="removeUser(userIndex)" [disabled]="users.length < 2">
+              <mat-icon>delete_outline</mat-icon>
+              Quitar usuario
+            </button>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de documento</mat-label>
+              <input matInput formControlName="tipoDocumentoIdentificacion" placeholder="Código del catálogo SISPRO">
+              <mat-error *ngIf="user.get('tipoDocumentoIdentificacion').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Número de documento</mat-label>
+              <input matInput formControlName="numDocumentoIdentificacion" maxlength="20">
+              <mat-error *ngIf="user.get('numDocumentoIdentificacion').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de usuario</mat-label>
+              <input matInput formControlName="tipoUsuario" maxlength="2" placeholder="Código del catálogo SISPRO">
+              <mat-error *ngIf="user.get('tipoUsuario').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de nacimiento</mat-label>
+              <input matInput type="date" formControlName="fechaNacimiento">
+              <mat-error *ngIf="user.get('fechaNacimiento').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Sexo</mat-label>
+              <input matInput formControlName="codSexo" maxlength="2" placeholder="Código oficial">
+              <mat-error *ngIf="user.get('codSexo').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>País de residencia</mat-label>
+              <input matInput formControlName="codPaisResidencia" maxlength="3">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Municipio de residencia</mat-label>
+              <input matInput formControlName="codMunicipioResidencia" maxlength="5" placeholder="Código DANE">
+              <mat-error *ngIf="user.get('codMunicipioResidencia').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Zona territorial</mat-label>
+              <input matInput formControlName="codZonaTerritorialResidencia" maxlength="2" placeholder="Código oficial">
+              <mat-error *ngIf="user.get('codZonaTerritorialResidencia').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Incapacidad</mat-label>
+              <input matInput formControlName="incapacidad" placeholder="Valor según Documento Técnico 1">
+              <mat-error *ngIf="user.get('incapacidad').hasError('required')">Campo obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>País de origen</mat-label>
+              <input matInput formControlName="codPaisOrigen" maxlength="3">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Registro SIRAS</mat-label>
+              <input matInput formControlName="registroSIRAS" maxlength="60" placeholder="Solo cuando aplique">
+            </mat-form-field>
+          </div>
+
+          <div class="services-heading">
+            <div>
+              <h3>Servicios realizados</h3>
+              <p>Agrega consultas o procedimientos efectivamente prestados, no tratamientos planeados.</p>
+            </div>
+            <button mat-flat-button color="primary" type="button" (click)="addService(userIndex)">
+              <mat-icon>add</mat-icon>
+              Agregar servicio
+            </button>
+          </div>
+
+          <div formArrayName="servicios">
+            <div class="service-block" *ngFor="let service of servicesFor(userIndex).controls; let serviceIndex = index" [formGroupName]="serviceIndex">
+              <div class="section-title service-title">
+                <h4>Servicio {{ serviceIndex + 1 }}</h4>
+                <button mat-button color="warn" type="button" (click)="removeService(userIndex, serviceIndex)" [disabled]="servicesFor(userIndex).length < 2">Quitar</button>
+              </div>
+
+              <div class="form-grid">
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo de servicio</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="consulta">Consulta</mat-option>
+                    <mat-option value="procedimiento">Procedimiento</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Código del prestador/sede</mat-label>
+                  <input matInput formControlName="codPrestador" maxlength="12">
+                  <mat-error *ngIf="service.get('codPrestador').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Fecha y hora de atención</mat-label>
+                  <input matInput type="datetime-local" formControlName="fechaInicioAtencion">
+                  <mat-error *ngIf="service.get('fechaInicioAtencion').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Código CUPS</mat-label>
+                  <input matInput formControlName="codCups" maxlength="6">
+                  <mat-error *ngIf="service.get('codCups').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Número de autorización</mat-label>
+                  <input matInput formControlName="numAutorizacion">
+                </mat-form-field>
+                <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'procedimiento'">
+                  <mat-label>ID MIPRES</mat-label>
+                  <input matInput formControlName="idMIPRES">
+                </mat-form-field>
+                <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'procedimiento'">
+                  <mat-label>Vía de ingreso</mat-label>
+                  <input matInput formControlName="viaIngresoServicioSalud" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('viaIngresoServicioSalud').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Modalidad de atención</mat-label>
+                  <input matInput formControlName="modalidadGrupoServicioTecSal" maxlength="2" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('modalidadGrupoServicioTecSal').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Grupo de servicios</mat-label>
+                  <input matInput formControlName="grupoServicios" maxlength="2" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('grupoServicios').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Código de servicio habilitado</mat-label>
+                  <input matInput type="number" formControlName="codServicio">
+                  <mat-error *ngIf="service.get('codServicio').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Finalidad</mat-label>
+                  <input matInput formControlName="finalidadTecnologiaSalud" maxlength="2" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('finalidadTecnologiaSalud').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'consulta'">
+                  <mat-label>Causa/motivo de atención</mat-label>
+                  <input matInput formControlName="causaMotivoAtencion" maxlength="2" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('causaMotivoAtencion').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Diagnóstico principal CIE-10</mat-label>
+                  <input matInput formControlName="codDiagnosticoPrincipal">
+                  <mat-error *ngIf="service.get('codDiagnosticoPrincipal').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'consulta'">
+                  <mat-label>Tipo de diagnóstico principal</mat-label>
+                  <input matInput formControlName="tipoDiagnosticoPrincipal" maxlength="2" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('tipoDiagnosticoPrincipal').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <ng-container *ngIf="service.get('type').value === 'consulta'">
+                  <mat-form-field appearance="outline"><mat-label>Diagnóstico relacionado 1</mat-label><input matInput formControlName="codDiagnosticoRelacionado1"></mat-form-field>
+                  <mat-form-field appearance="outline"><mat-label>Diagnóstico relacionado 2</mat-label><input matInput formControlName="codDiagnosticoRelacionado2"></mat-form-field>
+                  <mat-form-field appearance="outline"><mat-label>Diagnóstico relacionado 3</mat-label><input matInput formControlName="codDiagnosticoRelacionado3"></mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="service.get('type').value === 'procedimiento'">
+                  <mat-form-field appearance="outline"><mat-label>Diagnóstico relacionado</mat-label><input matInput formControlName="codDiagnosticoRelacionado"></mat-form-field>
+                  <mat-form-field appearance="outline"><mat-label>Diagnóstico de complicación</mat-label><input matInput formControlName="codComplicacion"></mat-form-field>
+                </ng-container>
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo de documento del profesional</mat-label>
+                  <input matInput formControlName="profesionalTipoDocumento" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('profesionalTipoDocumento').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Documento del profesional</mat-label>
+                  <input matInput formControlName="profesionalNumeroDocumento" maxlength="20">
+                  <mat-error *ngIf="service.get('profesionalNumeroDocumento').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Valor del servicio</mat-label>
+                  <input matInput type="number" min="0" formControlName="vrServicio">
+                  <mat-error *ngIf="service.get('vrServicio').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Concepto de recaudo</mat-label>
+                  <input matInput formControlName="conceptoRecaudo" maxlength="2" placeholder="Código oficial">
+                  <mat-error *ngIf="service.get('conceptoRecaudo').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Valor del pago moderador</mat-label>
+                  <input matInput type="number" min="0" formControlName="valorPagoModerador">
+                  <mat-error *ngIf="service.get('valorPagoModerador').hasError('required')">Campo obligatorio</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="addUser()">
+          <mat-icon>person_add</mat-icon>
+          Agregar usuario
+        </button>
+        <button mat-flat-button color="primary" type="submit">
+          <mat-icon>data_object</mat-icon>
+          Generar JSON
+        </button>
+      </div>
+    </form>
+
+    <section class="home-card preview-card" *ngIf="jsonPreview">
+      <div class="section-title">
+        <div>
+          <h2>Vista previa del JSON</h2>
+          <p>Revisa los datos antes de descargar; la aceptación final depende del MUV.</p>
+        </div>
+        <button mat-flat-button color="primary" type="button" (click)="downloadJson()">
+          <mat-icon>download</mat-icon>
+          Descargar archivo
+        </button>
+      </div>
+      <pre>{{ jsonPreview }}</pre>
+    </section>
+  </vex-page-layout-content>
+</vex-page-layout>

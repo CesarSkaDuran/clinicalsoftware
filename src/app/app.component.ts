@@ -143,7 +143,12 @@ export class AppComponent {
             route: '/app/gastos',
             icon: baselineMonetizationOn
           },
-      
+          {
+            type: 'link',
+            label: 'RIPS sin factura',
+            route: '/app/rips-sin-factura',
+            icon: icAssignment
+          },
 
           {
             type: 'dropdown',
@@ -156,7 +161,6 @@ export class AppComponent {
                 route: '/app/cierre',
                 icon: icMinus,
               },
-          
             ]
           },
         ]

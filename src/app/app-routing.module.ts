@@ -31,6 +31,10 @@ const childrenRoutes: Routes = [
     loadChildren: () => import('./pages/gastos/gastos.module').then(m => m.GastosModule)
   },
   {
+    path: 'rips-sin-factura',
+    loadChildren: () => import('./pages/rips-sin-factura/rips-sin-factura.module').then(m => m.RipsSinFacturaModule)
+  },
+  {
     path: 'telemedicine',
     loadChildren: () => import('./pages/telemedicine/telemedicine.module').then(m => m.TelemedicineModule)
   },
@@ -46,7 +50,6 @@ const childrenRoutes: Routes = [
     path: 'records/view/:recordId',
     loadChildren: () => import('./pages/userRecord/user-record.module').then(m => m.UserRecordModule)
   },
-    
   {
     path: 'procedimientosPaciente',
     loadChildren: () => import('./pages/procedimientosPaciente/procedimientosPaciente.module').then(m => m.ProcedimientosPacienteModule)
