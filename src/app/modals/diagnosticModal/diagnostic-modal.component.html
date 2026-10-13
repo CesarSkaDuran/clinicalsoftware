@@ -1,0 +1,46 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title class="title text-black-600">Diagnóstico</h2>
+</div>
+<mat-dialog-content style="height: 322px;">
+    <form fxLayout="column" fxFlex.gt-xs [formGroup]="procedureForm">
+        <!-- 
+           <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+             <mat-label>Procedimiento POS</mat-label>
+             <mat-select formControlName="procedure" placeholder="Procedimiento POS" #singleSelect>
+               <mat-option>
+                 <ngx-mat-select-search [formControl]="procFilterCtrl"
+                   placeholderLabel="Buscar por código o palabra clave"
+                   noEntriesFoundLabel="'No se encontraron resultados'" [searching]="searchingProcedures">
+                 </ngx-mat-select-search>
+               </mat-option>
+               <mat-option
+                 style="display: inline-block; flex-grow: 1;overflow: scroll;text-overflow: initial; height: auto;"
+                 *ngFor="let proc of filteredServerSideProcedures | async" [value]="proc">
+                 {{proc.code}} | {{proc.description}}
+               </mat-option>
+             </mat-select>
+           </mat-form-field> -->
+               <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+                   <mat-label>Diagnóstico</mat-label>
+                   <mat-select formControlName="diagnostic" placeholder="Diagnóstico" #singleSelect>
+                       <mat-option>
+                           <ngx-mat-select-search [formControl]="procFilterCtrl"
+                               placeholderLabel="Buscar por código o palabra clave"
+                               noEntriesFoundLabel="'No se encontraron resultados'" 
+                               [searching]="searchingProcedures">
+                           </ngx-mat-select-search>
+                       </mat-option>
+                       <mat-option *ngFor="let diag of filtereddataProcedure | async" [value]="diag.id">
+                           {{diag.cod_four}} | {{diag.des_four}}
+                       </mat-option>
+                   </mat-select>
+               </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+    <button mat-flat-button (click)="save()" [disabled]="sending || !procedureForm.valid" color="primary">
+        <span *ngIf="!sending">Guardar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+    </button>
+</mat-dialog-actions>

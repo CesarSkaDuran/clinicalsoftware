@@ -1,0 +1,20 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h3 mat-dialog-title class="title" style="color: #616e7c;">Usuario de aplicación</h3>
+</div>
+
+<mat-dialog-content style="height: 364px;">
+    <p style="letter-spacing: 0.1px;">
+        El paciente : Sr (a) <strong>{{data?.record?.patient?.name}}</strong> se ha creado como usuario de la Aplicación Clinical Software,
+        mediante la cual recibirá su servicio de teleorientacion, por favor descargue la App desde el
+        siguiente enlace : <a href="https://play.google.com/store/apps/details?id=com.boxmedia.clinical_software" target="_blank" style="color: blue;">Descargar app</a> 
+    </p>
+    <p class="mt-5">Una vez descargada la aplicación use los siguientes datos de registro :</p>
+    <p class="mt-5"><strong>Usuario :</strong> {{data?.record?.patient?.email}}</p>
+    <p><strong>Clave :</strong> {{data?.record?.patient?.identification}}</p>
+    <p class="mt-5">Una vez ingresa pulsar la opción iniciar consulta y podrá ver la hora y fecha asignada de su cita.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <!-- <button mat-button (click)="close()">Cancelar</button> -->
+  <button mat-flat-button (click)="close()" color="primary">Cerrar</button>
+</mat-dialog-actions>

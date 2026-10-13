@@ -1,0 +1,126 @@
+<vex-page-layout @stagger>
+  <div class="home-card" style="padding: 45px;">
+    <div class="margin-content">
+      <h1 class="display-1 font-medium mt-4">Lista de procedimientos</h1>
+    </div>
+  </div>
+  <vex-page-layout-content fxLayout="column">
+    <!-- <div fxLayout="row" fxLayoutAlign="start center" class="mb-6">
+      <h1 class="display-1 font-medium mt-4">Ingresos Diarios</h1>
+    </div> --> 
+    <div class="home-card overflow-auto p-10" fxLayout="column">
+        <div fxLayout="row" fxflex class=" table-controls" fxLayoutGap="8px">
+          <form fxLayout="column" fxFlex.gt-xs class="form-container" [formGroup]="filters">
+            <div fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+              fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+              fxLayoutGap.xs="12px">
+              <mat-form-field appearance="outline" style="width: 100%;" fxFlexAlign.xs="stretch"
+                class="blue no-pad bold-form" floatLabel="always">
+                <mat-label>Buscar</mat-label>
+                <input matInput (keyup)="searchKeyUp($event)" #search
+                  placeholder="Ingrese el nombre" formControlName="search" />
+              </mat-form-field>
+<!-- 
+              <mat-form-field appearance="outline" style="width: 100%;" fxFlexAlign.xs="stretch"
+                class="blue no-pad bold-form" floatLabel="always">
+                <mat-label>Fecha Inicial</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha"
+                  autocomplete="off" (dateChange)="dateChange($event)" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 100%;" fxFlexAlign.xs="stretch"
+                class="blue no-pad bold-form" floatLabel="always">
+                <mat-label>Fecha Final</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="date2" placeholder="Rango de fecha"
+                  autocomplete="off" (dateChange)="dateChange($event)" />
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>        -->
+            </div>
+          </form>
+        </div>
+      <!-- table -->
+      <table @stagger [dataSource]="afiliacionFilter" class="table-100" mat-table matSort>
+        <!-- Type Column -->
+
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef >Nombre</th>
+          <td mat-cell *matCellDef="let row" class=" text-secondary">
+            <div fxLayout="row" fxLayoutAlign="center">
+              {{row?.nombre }}
+            </div>
+          </td>
+        </ng-container>
+        <!-- Type Column -->
+        <ng-container matColumnDef="nit">
+          <th mat-header-cell *matHeaderCellDef >Categoria</th>
+          <td mat-cell *matCellDef="let row" class=" text-secondary">
+            {{row?.categoria?.nombre}}
+          </td>
+        </ng-container>
+        <!-- Code Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef >Valor 1</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="column" fxLayoutAlign="center ">
+              <span class="date text-secondary">{{ row.valor1 }}</span>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef >valor 2</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="column" fxLayoutAlign="center ">
+              <span class="date text-secondary">{{ row.valor2}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef >Opciones</th>
+          <td mat-cell *matCellDef="let element" class="center ">
+            <div fxLayout="row" fxLayoutAlign="center">
+
+              <button (click)="openModal(element)" mat-menu-item>
+                <mat-icon style="color:rgb(4, 4, 73)">remove_red_eye</mat-icon>
+              </button>
+              <button (click)="delete(element)" mat-menu-item>
+               <mat-icon  style="color:red">delete</mat-icon>
+             </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div [hidden]="data.length > 0" class="pt-9 pb-9">
+        <div class="alternate-result">
+          <div fxLayout="row" fxFlex fxLayoutAlign="center center">
+            <div [hidden]="!loadingRecords">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <mat-spinner diameter="32"></mat-spinner>
+                <span>CARGANDO</span>
+              </div>
+            </div>
+            <div [hidden]="loadingRecords || data.length > 0">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <span class="text-secondary headline-1">NO HAY RESULTADOS</span>
+                <span class="text-secondary headline-1">CREA UN NUEVO INGRESO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator [length]="resultsLength" (page)="pageChange($event)" [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="pageSize" class="sticky left-0">
+      </mat-paginator>
+    </div>
+  </vex-page-layout-content>
+
+
+</vex-page-layout>

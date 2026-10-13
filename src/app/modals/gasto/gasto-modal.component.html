@@ -1,0 +1,77 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Cuenta de cobro</h2>
+</div>
+<mat-dialog-content style="height: 500px;">
+  <form fxLayout="column" fxFlex.gt-xs [formGroup]="obs">
+     
+
+     <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%">
+       <mat-label>Cliente</mat-label>
+       <mat-select class="blue-input" required #valor formControlName="id_empresa" placeholder="..."
+         #singleSelect>
+         <mat-option (keyup.control.c)="openModalTerceros()">
+           <ngx-mat-select-search [formControl]="PlanFilterCtrl" placeholderLabel="Buscar por código o palabra clave"
+             noEntriesFoundLabel="'no encontrado para crear presiona control + C'" [searching]="searchingEps">
+           </ngx-mat-select-search>
+         </mat-option>
+         <mat-option *ngFor="let data of filtereddataEps | async" [value]="data.id"
+           >
+           ({{data.nombre}}) | {{data.documento}}
+         </mat-option>
+       </mat-select>
+     </mat-form-field>
+ 
+
+          <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%">
+       <mat-label>Fecha</mat-label>
+       <input matInput [matDatepicker]="datePicker" formControlName="dataHoy" placeholder="Seleccione"
+         autocomplete="off"
+         required />
+       <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+       <mat-datepicker #datePicker></mat-datepicker>
+     </mat-form-field>
+
+         <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%">
+      <mat-label>Concepto</mat-label>
+      <input matInput placeholder="..." formControlName="nombre" required />
+    </mat-form-field>
+  
+    <!--      <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%">
+      <mat-label>Empresa</mat-label>
+      <input matInput placeholder="..." formControlName="company" required />
+    </mat-form-field> -->
+
+    <!-- <mat-form-field appearance="outline" class="mb-4 bold-form items-form" class="item">
+      <mat-label>Iva</mat-label>
+      <mat-select formControlName="iva" placeholder="..." #singleSelect>
+        <mat-option value="19">Si</mat-option>
+        <mat-option value="0">No</mat-option>
+      </mat-select>
+    </mat-form-field> -->
+
+    <!-- <mat-form-field appearance="outline" fxFlex class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Valor</mat-label>
+      <input matInput type="number" min="0" placeholder="..." formControlName="valor" required />
+    </mat-form-field> -->
+         <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%">
+      <mat-label>Observación</mat-label>
+      <input matInput placeholder="..." formControlName="obs" required />
+    </mat-form-field>
+
+         <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%">
+          <mat-label>Valor</mat-label>
+          <input class="blue-input" required ngModel type="text" style="text-align: end;"
+            (blur)="transformAmount($event)" [(ngModel)]="formattedAmount" class="example-right-align" matInput
+            placeholder="ingrese el valor" formControlName="valor" />
+          <!-- <span style="position: relative;top:-3px;" matPrefix>$&nbsp;</span>
+                                           <span style="position: relative; top:-3px;" matSuffix>.00</span> -->
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()" [disabled]="sending || !obs.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,117 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 *ngIf="edit == false" mat-dialog-title class="title text-black-600">Información del Cliente</h2>
+   <h2 *ngIf="edit == true" mat-dialog-title class="title text-black-600">Editar del Cliente</h2>
+</div>
+<mat-dialog-content style="height: 418px;">
+  <form fxLayout="column" [formGroup]="patient">
+      <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+      <!-- <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Tipo Tercero</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="tipo_terceros" required>
+          <mat-option value="8">Cliente</mat-option>
+          <mat-option value="9">Vendedor</mat-option>
+          <mat-option value="10">Proveedor</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+      
+<!-- 
+        <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+          <mat-label>Tipo</mat-label>
+          <mat-select required formControlName="tipo_terceros" placeholder="..." #singleSelect>
+   
+            <mat-option  *ngFor="let data of filtereddataTipo" value="{{data.id}}">
+              {{data.nombre}} {{data.consecutivo}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> -->
+        
+        <!-- <button style="width: 63px;border-radius: 40px;" (click)="openModalTipo()">
+          <mat-icon style=" font-size: 35px;padding-top: 10px;">
+              person_add
+          </mat-icon>
+        </button> -->
+      
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Tipo Naturaleza</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="tipo_naturaleza" required>
+          <mat-option value="1">Natural</mat-option>
+          <mat-option value="2">Juridica</mat-option>
+        </mat-select>
+      </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Regimen</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="regimen" required>
+          <mat-option value="1">Responsable</mat-option>
+          <mat-option value="2">No responsable</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div style="height: 60px;" fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Nombre o razon social</mat-label>
+        <input matInput placeholder="..." formControlName="nombre" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="..." formControlName="apellido" required />
+      </mat-form-field>
+    </div>
+  
+    <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Tipo de documento</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="tipo_documento" required>    
+          <mat-option value="1">Cedula</mat-option>
+          <mat-option value="2">Nit</mat-option>
+          <mat-option value="3">Cedula Extrangeria</mat-option>
+          <mat-option value="4">Pasaporte</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Documento</mat-label>
+        <input matInput placeholder="..." formControlName="documento" required />
+      </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>DV</mat-label>
+        <input matInput placeholder="..." formControlName="dv"  />
+      </mat-form-field>
+    </div>
+    <div style="height: 60px;" fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="..." formControlName="telefono" />
+      </mat-form-field>
+  
+         
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput placeholder="..." formControlName="email" />
+    </mat-form-field>
+    </div>
+       <div style="height: 60px;" fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+         <mat-form-field appearance="outline" fxFlex.gt-xs class=" bold-form" floatLabel="always">
+           <mat-label>Ciudad</mat-label>
+           <input matInput placeholder="..." formControlName="ciudad" />
+         </mat-form-field>
+       <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form mb-4" floatLabel="always">
+         <mat-label>Dirección</mat-label>
+         <input matInput placeholder="..." formControlName="direccion" />
+       </mat-form-field>
+
+       </div>
+
+    <!-- </perfect-scrollbar> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+ <button *ngIf="edit == false" mat-flat-button (click)="save()" [disabled]="sending || !patient.valid" color="primary">
+   <span *ngIf="!sending">Guardar</span>
+   <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+ </button>
+ <button *ngIf="edit == true" mat-flat-button (click)="saveEdit()" 
+   color="primary">
+   <span *ngIf="!sending">Actualizar</span>
+   <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+ </button>
+</mat-dialog-actions>

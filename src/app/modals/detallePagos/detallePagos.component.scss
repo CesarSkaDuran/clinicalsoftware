@@ -1,0 +1,21 @@
+.cont-filtro{
+    padding: 10px;
+}
+.cont-bloque{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.cont-btn{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    justify-items: flex-end; 
+    align-items: flex-end;
+    padding: 10px 0px;
+}
+.etiquetas{
+    font-size: 25px;
+    color: #455A64;
+    padding: 5px;
+}

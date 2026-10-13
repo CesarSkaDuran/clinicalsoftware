@@ -1,0 +1,215 @@
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="saveCobro()" color="primary">
+    <span *ngIf="!sending">Generar Cuenta</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Cuenta de cobro</h2>
+
+</div>
+  
+<div fxLayout="column" style="height: 650px;">
+  <form fxLayout="column" [formGroup]="obs">
+
+
+    <div fxLayout="row">
+      <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Cliente</mat-label>
+        <mat-select class="blue-input" required #valor formControlName="id_empresa" placeholder="..." #singleSelect>
+          <mat-option (keyup.control.c)="openModalTerceros()">
+            <ngx-mat-select-search [formControl]="PlanFilterCtrl" placeholderLabel="Buscar por código o palabra clave"
+              noEntriesFoundLabel="'no encontrado para crear presiona control + C'" [searching]="searchingEps">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let data of filtereddataEps | async" [value]="data.id">
+            ({{data.nombre}}) | {{data.documento}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Sucursales</mat-label>
+        <mat-select formControlName="sucursal_id" placeholder="..." #singleSelect>
+          <mat-option *ngFor="let data of sucursal" [value]="data.id">
+            {{data.nombre}} | {{data.departamento}}
+          </mat-option>
+
+        </mat-select>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="dataHoy" placeholder="Seleccione"
+          autocomplete="off" required />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Observación</mat-label>
+        <input matInput placeholder="..." formControlName="obs" />
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row">
+
+      <!-- <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Concepto</mat-label>
+        <mat-select formControlName="nombre" placeholder="..." #singleSelect>
+          <mat-option value="Afiliaciones">Afiliaciones</mat-option>
+          <mat-option value="Planillas">Planillas</mat-option>
+          <mat-option value="Asesorias">Asesorias</mat-option>
+          <mat-option value="Comisiones">Comisiones</mat-option>
+          <mat-option value="Honorarios">Honorarios</mat-option>
+          <mat-option value="Servicio Permanente">Servicio Permanente</mat-option>
+          <mat-option value="Incapacidades">Incapacidades</mat-option>
+          <mat-option value="Otro">Otro</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 1; width:100%; margin: 5px;">
+      <mat-label>Concepto</mat-label>
+      <input matInput placeholder="..." formControlName="nombre" required />
+    </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Valor</mat-label>
+        <input class="blue-input" required ngModel type="text" style="text-align: end;" (blur)="transformAmount($event)"
+          [(ngModel)]="formattedAmount" class="example-right-align" matInput placeholder="ingrese el valor"
+          formControlName="valor" />
+        <!-- <span style="position: relative;top:-3px;" matPrefix>$&nbsp;</span>
+                                              <span style="position: relative; top:-3px;" matSuffix>.00</span> -->
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>Iva</mat-label>
+        <mat-select formControlName="iva" placeholder="..." #singleSelect>
+          <mat-option value="19">Si</mat-option>
+          <mat-option value="0">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+        style="flex-grow: 1; width:100%; margin: 5px;">
+        <mat-label>4 * 1000</mat-label>
+        <mat-select formControlName="cuatroxmil" placeholder="..." #singleSelect>
+          <mat-option value="1">Si</mat-option>
+          <mat-option value="0">No</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end ">
+      <button mat-flat-button (click)="save()" [disabled]="sending || !obs.valid" color="primary">
+        <span *ngIf="!sending">Agregar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+      </button>
+      <button mat-flat-button (click)="deleteAll()" style="background: grey; margin-left: 10px;" color="primary">
+        <span *ngIf="!sending">Restaurar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+      </button>
+    </div>
+    <br>
+  </form>
+
+  <div fxLayout="column" class="cont-table">
+    <table mat-table [dataSource]="detalleServicio" class="table-100">
+      <ng-container matColumnDef="nombre_empleado">
+        <th mat-header-cell *matHeaderCellDef class="txt-left"> SERVICIO </th>
+        <td mat-cell *matCellDef="let element" class="txt-left">
+          {{ element.nombre}}
+        </td>
+
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="paquete">
+               <th mat-header-cell *matHeaderCellDef class="enc-tabla"> PAQUETE </th>
+               <td mat-cell *matCellDef="let element">
+                 {{ element.valor == 1 ? ' No aplica' : element.paquete}}
+               </td>>
+             </ng-container> -->
+
+      <ng-container matColumnDef="documento_empleado">
+        <th mat-header-cell *matHeaderCellDef class="enc-tabla"> CLIENTE </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.empresa?.nombre}}
+        </td>>
+      </ng-container>
+
+      <ng-container matColumnDef="afiliacion">
+        <th mat-header-cell *matHeaderCellDef class="enc-tabla"> VALOR </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.valor - 1 | currency}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contrato">
+        <th mat-header-cell *matHeaderCellDef class="enc-tabla"> OBSERVACION </th>
+        <td mat-cell *matCellDef="let element">
+          {{element?.obs}}
+        </td>
+
+      </ng-container>
+
+      <!--  
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>TOTAL </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.valor == 1 ? 0 : element.valor  * element.cantidad | currency}}
+        </td>
+      </ng-container> -->
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <table fxLayoutAlign="end " class="table table-sm">
+      <tbody>
+        <tr>
+          <th scope="row">
+            <h6 style="font-weight: bold;"><span style="color:rgb(0, 18, 68);">SUBTOTAL:</span></h6>
+          </th>
+          <td>
+            <h6> {{totalServicio | currency}}</h6>
+          </td>
+
+        </tr>
+        <!-- <tr>
+          <th scope="row">
+            <h6 style="font-weight: bold;"><span style="color:rgb(0, 18, 68);">4 * 1000:</span></h6>
+          </th>
+          <td>
+            <h6>{{totalServicio1 | currency}}</h6>
+          </td>
+
+        </tr> -->
+        <tr>
+          <th scope="row">
+            <h6 style="font-weight: bold;"><span style="color:rgb(0, 18, 68);">IVA:</span></h6>
+          </th>
+          <td>
+            <h6>{{totalServicio2 | currency}}</h6>
+          </td>
+
+        </tr>
+        <tr>
+          <th scope="row">
+            <h6 style="font-weight: bold;"><span style="color:rgb(0, 18, 68);">TOTAL:</span></h6>
+          </th>
+          <td colspan="2">
+            <h6>{{totalServicio + totalServicio1 + totalServicio2  | currency}}</h6>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

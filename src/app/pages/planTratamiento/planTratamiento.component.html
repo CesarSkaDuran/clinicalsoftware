@@ -1,0 +1,260 @@
+<vex-page-layout @stagger>
+    <vex-page-layout-content class="p-0" style="min-height: calc(100vh - 64px);">
+        <div fxLayout="row" fxLayoutAlign="space-between center" class="ml-4 mr-4" style="padding-top: 20px;">
+            <h2 class="title  center" style="font-size: xxx-large;">$ PLANES DE TRATAMIENTO</h2>
+            <div class="row">
+                <p class="button-top subheading-1 text-secondary">{{currentPatient.name}}</p>
+                <p class="button-top subheading-1 text-secondary">CEDULA</p>
+                <p class="button-top subheading-1 text-secondary">{{currentPatient.identification}}</p>
+                <P class="button-top subheading-1 text-secondary">{{currentPatient? currentPatient.sex : ''}}</P>
+                <P class="button-top subheading-1 text-secondary">
+                    {{ currentPatient ? ageFromDate(currentPatient.birth_date) : '' }} años </P>
+            </div>
+            <!-- <h1 class="title  center" style="font-size: revert; color: grey;">HISTORIA CLINICA N°:
+          {{currentRecord.id}}</h1> -->
+        </div>
+
+
+
+        <form class="form-container">
+            <div fxLayout="row" fxFlex fxLayoutAlign="start start">
+                <div fxLayout="column" fxFlex.gt-xs class="tab-container left"
+                    style=" padding-left: 50px; padding-right: 50px;">
+                    <div fxLayout="row" fxLayoutAlign="space-between center" class="pb-6">
+                        <h2 style="margin-top: 25px; font-weight: 500; color: rgb(0 184 255);" mat-flat-button>DATOS
+                            PERSONALES</h2>
+                        <div>
+                            <!-- <mat-icon style="margin-right: 20px;color:#002d7f;" [icIcon]="baselineRemoveRedEye"
+                                (click)="openPatient(currentPatient)" inline="true" size="50px">
+                            </mat-icon>
+                            <button
+                                style="margin-top: 25px;position: relative;top: -15px; background:#002d7f; color:white"
+                                (click)="openPatient(currentPatient)" mat-flat-button color="primary">Editar</button> -->
+                        </div>
+                    </div>
+
+
+                    <table style="border: hidden;" class="table table-bordered">
+                        <thead style="border: hidden;">
+                            <tr style="border: hidden;">
+                                <th style="font-size: 16px; color: black;" style="border: hidden; color: #818181;">
+                                    Telefono</th>
+                                <th style="font-size: 16px; color: black;" style="border: hidden; color: #818181;">
+                                    Dirección</th>
+                                <th style="font-size: 16px; color: black;" style="border: hidden; color: #818181;">
+                                    Ciudad</th>
+                                <th style="font-size: 16px; color: black;" style="border: hidden; color: #818181;">Email
+                                </th>
+                                <th style="font-size: 16px; color: black;" style="border: hidden; color: #818181;">EPS
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border: hidden;">
+                                <td style="border: hidden;font-size: x-large;font-weight: bold;">
+                                    {{currentPatient.phone}}</td>
+                                <td style="border: hidden; font-size: x-large;font-weight: bold;">
+                                    {{currentPatient.address }}</td>
+                                <td style="border: hidden; font-size: x-large;font-weight: bold;">Cucuta</td>
+                                <td style="border: hidden; font-size: x-large;font-weight: bold;">
+                                    {{currentPatient.email }}</td>
+                                <td style="border: hidden; font-size: x-large;font-weight: bold;">
+                                    {{currentPatient.eps == 1 ? 'Aliansalud' : currentPatient.eps == 2 ? 'Comparta EPS' : currentPatient.eps == 3 ? 'Compensar' : currentPatient.eps == 4 ? 'Confenalco Valle' : currentPatient.eps == 5 ? 'Coomeva' : currentPatient.eps == 6 ? 'Coosalud' : currentPatient.eps == 7 ? 'Cruz Blanca' : currentPatient.eps == 8 ? 'EPS S.O.S' : currentPatient.eps == 9 ? 'Famisanar' : currentPatient.eps == 10 ? 'Medimás' : currentPatient.eps == 11 ? 'Nueva EPS' : currentPatient.eps == 12 ? 'Salud Total' : currentPatient.eps == 13 ? 'Sanitas' : currentPatient.eps == 14 ? 'Sura' : currentPatient.eps == 0 ? 'No tiene' : '' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </form>
+
+        <div fxLayout="row" fxflex class="p-4 table-controls" fxLayoutGap="6px">
+
+            <form fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+                fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="15px"
+                fxLayoutGap.xs="12px" [formGroup]="filters">
+                <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                    <mat-label>Paciente</mat-label>
+                    <input matInput placeholder="Nombre del  Paciente..." formControlName="search" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                    <mat-label>Fecha Inicial</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha"
+                        autocomplete="off" />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex.gt-xs class="blue bold-form" floatLabel="always">
+                    <mat-label>Fecha Final</mat-label>
+                    <input matInput [matDatepicker]="picker2" formControlName="date2" placeholder="Rango de fecha"
+                        autocomplete="off" />
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+                <!-- <button style="margin-top: 25px; background-color:#002d7f; color:white"
+                    (click)="openPatientsModal(currentRecord)" mat-flat-button><i style="color:white; font-size: 20px;"
+                        class="bi bi-plus-circle"></i> NUEVA
+                    CONSULTA</button>
+                <button style="margin-top: 25px;background-color:#002d7f; color:white"
+                    (click)="openPatientsModal(currentRecord)" mat-flat-button><span
+                        style="color:white; font-size: 20px;">$</span> PLAN DE TRATAMIENTO</button> -->
+            </form>
+        </div>
+        <div style="margin: 20px;">
+            <table @stagger [dataSource]="tableData" class="w-full" mat-table matSort>
+                <!-- Code Column -->
+                <ng-container matColumnDef="status">
+                    <th style="font-size: 16px; color: black;" mat-header-cell *matHeaderCellDef mat-sort-header>Estado
+                    </th>
+                    <td style="font-size: 16px;" mat-cell *matCellDef="let row" class=" text-secondary">
+                        <div class="row">
+                            <div style="border-radius: 10px;text-align: center; " fxLayout="column"
+                                fxLayoutAlign="center start"
+                                [ngStyle]="{'background-color': row.status === 1 ? 'orange' :''}">
+                                <div style="border-radius: 10px;text-align: center;" fxLayout="column"
+                                    fxLayoutAlign="center start"
+                                    [ngStyle]="{'background-color': row.status === 2 ? 'blue' :''}">
+                                    <div style="border-radius: 10px;text-align: center;" fxLayout="column"
+                                        fxLayoutAlign="center start"
+                                        [ngStyle]="{'background-color': row.status === 3 ? 'green' :''}">
+                                        <div style="border-radius: 10px;text-align: center;" fxLayout="column"
+                                            fxLayoutAlign="center start"
+                                            [ngStyle]="{'background-color': row.status === 4 ? 'red' :''}">
+                                            <p style="width: 100%;padding:10px; font-weight: bold;color: white; ">
+                                                {{ row.status == 1 ? "sin Iniciar":"" }}
+                                                {{ row.status == 2 ? "En proceso":"" }}
+                                                {{ row.status == 3 ? "finalizada":"" }}
+                                                {{ row.status == 4 ? "cancelada":"" }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="date_1">
+                    <th style="font-size: 16px; color: black;" mat-header-cell *matHeaderCellDef mat-sort-header>Dia
+                    </th>
+                    <td style="font-size: 16px;" mat-cell *matCellDef="let row" class=" text-secondary">
+                        {{row.created_at | date:"yyyy-MM-dd"}}
+                    </td>
+                </ng-container>
+                    <ng-container matColumnDef="valor">
+                        <th style="font-size: 16px; color: black;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                           Valor
+                        </th>
+                        <td style="font-size: 16px;" mat-cell *matCellDef="let row" class=" text-secondary">
+                            {{row.valor | currency}}
+                        </td>
+                    </ng-container>
+
+                <ng-container matColumnDef="service">
+                    <th style="font-size: 16px; color: black;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Tratamiento
+                    </th>
+                    <td style="font-size: 16px;" mat-cell *matCellDef="let row" class=" text-secondary">
+                        {{ row.nombre }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="doctor">
+                    <th style="font-size: 16px; color: black;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Especialista</th>
+                    <td style="font-size: 16px;" mat-cell *matCellDef="let row" class=" text-secondary">
+                        {{ row.user? row.user.name : '' }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="options">
+                    <th style="font-size: 16px; color: black;" mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td style="font-size: 16px;" mat-cell *matCellDef="let row" class="no-pad">
+                        <div class="row">
+                            <!-- <button (click)="openEvoModal(row)" mat-icon-button type=" button">
+                <mat-icon [icIcon]="icEvolution" class="mr-2 icon-primary"></mat-icon>
+              </button> -->
+
+                            <button style="background:#002d7f; color:white" mat-flat-button color="primary"
+                                (click)="selectRecordPatientGuard(row)">Evolucion</button>
+
+                            <button mat-icon-button type=" button">
+                                <mat-icon style="color:#002d7f" [icIcon]="baselineRemoveRedEye" color="primary">
+                                </mat-icon>
+                            </button>
+
+                            <button (click)="toPrint(row)" mat-icon-button type=" button">
+                                <mat-icon style="color:#002d7f" [icIcon]="icDelete" color="primary"></mat-icon>
+                            </button>
+
+
+                            <!-- <button (click)="openMedicalRecipe(row)" mat-icon-button type=" button">
+                <i style="font-size: 22px;" class="bi bi-clipboard-plus"></i>
+              </button>
+
+              <button (click)="openMedicalExamen(row)" mat-icon-button type=" button">
+                <i style="font-size: 22px;" class="bi bi-file-earmark-medical"></i>
+              </button>
+             
+                <figure>
+                 <button (click)="openMedicalMedicamento(row)" mat-icon-button type=" button">
+                   <mat-icon [icIcon]="baselineLocalHospital" color="primary">
+                   </mat-icon>
+                  </button>
+                 <figcaption class="msgStyle">Examen</figcaption>
+               </figure> -->
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
+        <!-- <form class="form-container">
+      <div fxLayout="row" fxFlex fxLayoutAlign="start start">
+        <div fxLayout="column" fxFlex.gt-xs class="tab-container left"
+          style=" padding-left: 50px; padding-right: 50px;">
+          <div fxLayout="row" fxLayoutAlign="end" class="pb-6">
+            <button style="margin-top: 25px;" (click)="openPatientsModal(currentRecord)" mat-flat-button
+              color="primary">Iniciar Nueva Consulta</button>
+          </div>
+
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>CONSULTAS</th>
+                <th>MOTIVOS</th>
+                <th>FECHA</th>
+                <th>ACCIONES</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let control of tableData">
+                <td>Consulta</td>
+                <td>{{control.details? control.details.motive : '' }}</td>
+                <td (click)="openDate(control)">{{control.created_at | date:"yyyy-MM-dd" }}</td>
+                <td>
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <mat-icon (click)="toPrint(control)" [icIcon]="baselineRemoveRedEye" class="mr-2 icon-primary">
+                    </mat-icon>
+                    <button style="margin-right: 5px;" mat-flat-button color="primary"
+                      (click)="openEvoModal(control)">Evolucion</button>
+                    <button style="margin-left: 5px;" mat-flat-button color="primary"
+                      (click)="openMedicalRecipe(control)">Formula</button>
+                    <button style="margin-left: 5px;" mat-flat-button color="primary"
+                      (click)="openMedicalExamen(control)">Examenes</button>
+                    <button style="margin-left: 5px;" mat-flat-button color="primary"
+                      (click)="openMedicalMedicamento(control)">Medicamentos</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </form> -->
+    </vex-page-layout-content>
+</vex-page-layout>

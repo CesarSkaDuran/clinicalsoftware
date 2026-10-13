@@ -1,0 +1,42 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Procedimiento</h2>
+</div>
+<mat-dialog-content style="height: 322px;">
+  <form fxLayout="column" fxFlex.gt-xs [formGroup]="procedure">
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2; width:100%">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="categoria_id">
+        <mat-option *ngFor="let data of categoria;" value="{{data.id}}">
+          {{data.nombre}}
+        </mat-option>
+
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="..." formControlName="nombre" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Valor 1</mat-label>
+      <input type="number" matInput placeholder="..." formControlName="valor1" required />
+    </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+          <mat-label>Valor 2</mat-label>
+          <input type="number" matInput placeholder="..." formControlName="valor2" required />
+        </mat-form-field>
+       
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button *ngIf="editar == false" mat-flat-button (click)="save()" [disabled]="sending || !procedure.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+  <button *ngIf="editar == true"  mat-flat-button (click)="actualizar()" [disabled]="sending || !procedure.valid" color="primary">
+    <span *ngIf="!sending">Actualizar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

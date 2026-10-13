@@ -1,0 +1,103 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 mat-dialog-title class="title text-black-600">Medicamento</h2>
+</div>
+<mat-dialog-content style="height: 310px;">
+    <form fxLayout="column" [formGroup]="medicine">
+        <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+            <mat-label>Producto</mat-label>
+            <mat-select formControlName="medicine" placeholder="Buscar producto" #singleSelect
+                (selectionChange)="medicineSelectionChange($event)">
+                <div class="container">
+                <mat-option>
+
+                        <ngx-mat-select-search [formControl]="medFilterCtrl"
+                            placeholderLabel="Buscar por código o palabra clave"
+                            noEntriesFoundLabel="'No se encontraron resultados'" 
+    
+                            [searching]="searchingMedicines">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                </div>
+                <mat-option *ngFor="let med of filteredServerSideMedicines | async" [value]="med">
+                    {{med.active}} | {{med.name}} | POS {{med.pos}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                <mat-label>Dosis</mat-label>
+                <input matInput placeholder="..." formControlName="dose" required />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                <mat-label>Medida</mat-label>
+                <mat-select placeholder="Selecciona" formControlName="measure" required>
+                    <mat-option value="Cant">Cant</mat-option>
+                    <mat-option value="mg">mg</mat-option>
+                    <mat-option value="Tab">Tab</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                <mat-label>Frecuencia</mat-label>
+                <mat-select placeholder="Selecciona" formControlName="frequency" required>
+                    <mat-option value="Ahora">Ahora</mat-option>
+                    <mat-option value="Antes de dormir">Antes de dormir</mat-option>
+                    <mat-option value="Cada hora">Cada hora</mat-option>
+                    <mat-option value="Cada 2 horas">Cada 2 horas</mat-option>
+                    <mat-option value="Cada 4 horas">Cada 4 horas</mat-option>
+                    <mat-option value="Cada 6 horas">Cada 6 horas</mat-option>
+                    <mat-option value="Cada 8 horas">Cada 8 horas</mat-option>
+                    <mat-option value="Cada 12 horas">Cada 12 horas</mat-option>
+                    <mat-option value="1 al dia">1 al dia</mat-option>
+                    <mat-option value="Cada 48 horas">Cada 48 horas</mat-option>
+                    <mat-option value="2 veces por semana">2 veces por semana</mat-option>
+                    <mat-option value="1 vez por mes">1 vez por mes</mat-option>
+                    <mat-option value="Otros">Otros</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                <mat-label>Duración</mat-label>
+                <mat-select placeholder="Selecciona" formControlName="duration" required>
+                    <mat-option value="24 horas">24 horas</mat-option>
+                    <mat-option value="48 horas">48 horas</mat-option>
+                    <mat-option value="3 días">3 días</mat-option>
+                    <mat-option value="4 dias">4 días</mat-option>
+                    <mat-option value="5 dias">5 días</mat-option>
+                    <mat-option value="6 dias">6 días</mat-option>
+                    <mat-option value="7 dias">7 días</mat-option>
+                    <mat-option value="8 dias">8 días</mat-option>
+                    <mat-option value="9 dias">9 días</mat-option>
+                    <mat-option value="10 dias">10 días</mat-option>
+                    <mat-option value="11 dias">11 días</mat-option>
+                    <mat-option value="12 dias">12 días</mat-option>
+                    <mat-option value="13 dias">13 días</mat-option>
+                    <mat-option value="14 dias">14 días</mat-option>
+                    <mat-option value="15 dias">15 días</mat-option>
+                    <mat-option value="20 dias">20 días</mat-option>
+                    <mat-option value="1 mes">1 mes</mat-option>
+                    <mat-option value="2 meses">2 meses</mat-option>
+                    <mat-option value="3 meses">3 meses</mat-option>
+                    <mat-option value="otros">Otros</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayout.xs="column" class="mb-4" fxLayoutGap="16px">
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                <mat-label>Cantidad</mat-label>
+                <input matInput placeholder="..." formControlName="quantity" required />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+                <mat-label>Vía de administración</mat-label>
+                <input matInput placeholder="..." readonly formControlName="administration" required />
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+    <button mat-flat-button (click)="save()" [disabled]="sending || !medicine.valid" color="primary">
+        <span *ngIf="!sending">Guardar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+    </button>
+</mat-dialog-actions>

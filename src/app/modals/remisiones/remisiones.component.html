@@ -1,0 +1,25 @@
+<mat-dialog-content>
+    <form fxLayout="column" fxLayout.gt-xs="row" fxFlex.gt-xs [formGroup]="obs">
+        <div fxLayout="column" fxFlex.gt-xs class="p-3">
+            <h2>Remisiones</h2>
+            <br>
+            <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                      style="flex-grow: 2; width:100%">
+                    <mat-label>Médico</mat-label>
+                    <mat-select formControlName="id_medico">
+                    <mat-option *ngFor="let data of remisiones;" value="{{data.id}}">
+                        {{data.nombre}} | {{data.especializacion}}
+                    </mat-option>
+
+                 </mat-select>
+             </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+    <button mat-flat-button (click)="openFactura()" [disabled]="sending || !obs.valid" color="primary">
+        <span *ngIf="!sending">Aceptar</span>
+        <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+    </button>
+</mat-dialog-actions>

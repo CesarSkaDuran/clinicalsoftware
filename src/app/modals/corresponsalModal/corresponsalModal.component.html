@@ -1,0 +1,55 @@
+<div class="container" *ngFor="let data of dataAppointment; let i = index">
+
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+        <h1 style="font-weight: 600;">Corresponsales</h1>
+        <br>
+        <h4>Consignas el valor {{data.value | currency}} libre de comisiones con los siguientes datos:</h4>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="container row" fxLayoutAlign="space-between center">
+         <div class="">
+             <h3 style="font-weight: 500;">Corresponsal</h3>
+             <br>
+             <h4 style="color: #7d7d7d;;">{{data.doctor.accounts.efecty.split(":")[2]}}</h4>
+             <br>
+             <h4 style="color: #7d7d7d;;">{{data.doctor.accounts.sured.split(":")[2]}}</h4>
+         </div>
+        <div class="">
+            <h3 style="font-weight: 500;">Numero de convenio</h3>
+            <br>
+            <h4 style="color: #7d7d7d;;">{{data.doctor.accounts.efecty.split(":")[0]}}</h4>
+            <br>
+            <h4 style="color: #7d7d7d;;">{{data.doctor.accounts.sured.split(":")[0]}}</h4>
+        </div>
+        <div class="">
+            <h3 style="font-weight: 500;">Titular</h3>
+            <br>
+            <h4 style="color: #7d7d7d;;">{{data.doctor.accounts.efecty.split(":")[1]}}</h4>
+            <br>
+            <h4 style="color: #7d7d7d;;">{{data.doctor.accounts.sured.split(":")[1]}}</h4>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <h4> {{data.doctor.accounts.conclusion}} </h4>
+    <br>
+    <h4> {{data.doctor.accounts.contact}} </h4>
+    <br>
+</div>
+<div style="padding-top: 20px;" class="container P-10 row" fxLayoutAlign="space-between center">
+    <button (click)="close()" style="border-radius: 10px;text-align: center;background: #8303c5; width:45%"
+        mat-icon-button type=" button">
+        <p style=" font-weight: bold;color: white;">
+            CERRAR
+        </p>
+    </button>
+
+    <button (click)="close()" style="border-radius: 10px;text-align: center;background: #8303c5; width:45%"
+        mat-icon-button type=" button">
+        <p style=" font-weight: bold;color: white;">
+            ACEPTAR
+    </button>
+</div>

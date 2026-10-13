@@ -1,0 +1,71 @@
+<div class="call-container" [fxLayout]="expanded ? 'row' : 'column'">
+    <div class="video-container" fxLayout="column" fxLayoutAlign="start center" [hidden]="!calling" [fxFlex]="expanded ? 100 : 0">
+        <div fxLayout="row" fxLayoutAlign="space-between center" class="pr-3 pl-1 py-1 w-100 name-bar">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <button mat-icon-button class="close" (click)="onClosePressed()">
+                    <mat-icon [icIcon]="icClose"></mat-icon>
+                </button>
+                <span class="status-circle" [ngClass]="{'online': isOnline, 'offline': !isOnline}"></span>
+                <span class="user-name ml-2">{{selectedUser ? selectedUser.name : ''}}</span>
+            </div>
+            <button mat-icon-button (click)="onExpandedPressed()" [hidden]="expanded">
+                <mat-icon [icIcon]="icExpand" class="mr-1"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="onExpandedPressed()" [hidden]="!expanded">
+                <mat-icon [icIcon]="icExpandExit" class="mr-1"></mat-icon>
+            </button>
+        </div>
+        <div class="image-box mb-3 mt-2" [ngClass]="{'expanded': expanded}" [fxFlex]="expanded ? 100 : 0">
+            <img [src]="selectedUser && selectedUser.profile_url && selectedUser.profile_url != '' ? selectedUser.profile_url : '/assets/images/default-patient-2.png'"
+                alt="" class="w-150" [hidden]="meeting">
+            <div [id]="localCallId" class="local" [hidden]="!meeting"></div>
+            <div style="position:relative;width: 100%;height: 100%;" [hidden]="!meeting">
+                <div *ngFor="let callId of remoteCalls" [id]="callId" class="remote"></div>
+            </div>
+        </div>
+        <span>Llamando...</span>
+        <div fxLayout="row" fxLayoutAlign="center center" class="px-2 py-3">
+            <button mat-icon-button class="mute-mic" (click)="onEndCallPressed()">
+                <mat-icon [icIcon]="icMic"></mat-icon>
+            </button>
+            <button mat-icon-button class="end-call ml-3" (click)="onCancellCallPressed()" [hidden]="meeting">
+                <mat-icon [icIcon]="icEnd"></mat-icon>
+            </button>
+            <button mat-icon-button class="end-call ml-3" (click)="onEndCallPressed()" [hidden]="!meeting">
+                <mat-icon [icIcon]="icEnd"></mat-icon>
+            </button>
+            <button mat-icon-button class="ml-3" (click)="startCall()" [hidden]="!meeting">
+                <mat-icon [icIcon]="icFlipCamera"></mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="chat-container" fxLayout="column" [fxFlex]="expanded ? 26 : 100">
+        <div fxLayout="row" fxLayoutAlign="space-between center" class="pr-3 pl-1 py-1 chat-header" [hidden]="calling">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <button mat-icon-button class="close" (click)="onClosePressed()">
+                    <mat-icon [icIcon]="icClose"></mat-icon>
+                </button>
+                <span class="status-circle" [ngClass]="{'online': isOnline, 'offline': !isOnline}"></span>
+                <span class="user-name ml-2">{{selectedUser ? selectedUser.name : ''}}</span>
+            </div>
+            <button mat-icon-button (click)="onCallPressed()">
+                <mat-icon [icIcon]="icCall" class="mr-1 icon-primary"></mat-icon>
+            </button>
+        </div>
+        <div class="chat-content" fxFlex>
+            <app-chat-message [message]="message" *ngFor="let message of messages"></app-chat-message>
+        </div>
+    
+        <div class="chat-send-options" fxLayout="row" fxLayoutAlign="start center" class="pl-4 pr-2 pb-1 pt-2">
+            <mat-form-field fxFlex style="margin-bottom: -1.25em" appearance="outline">
+                <input matInput placeholder="Mensaje..." [(ngModel)]="messageImput" (keyup.enter)="sendMessage()">
+            </mat-form-field>
+            <button mat-icon-button class="ml-2">
+                <mat-icon [icIcon]="icAttach" class="mr-1" color="secondary"></mat-icon>
+            </button>
+            <button mat-icon-button class="ml-2" (click)="sendMessage()">
+                <mat-icon [icIcon]="icSend" class="mr-1 icon-primary"></mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

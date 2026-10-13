@@ -1,0 +1,68 @@
+<div class="toolbar w-full px-gutter" fxLayout="row" fxLayoutAlign="start center" vexContainer>
+  <button (click)="openSidenav()" [fxHide]="!mobileQuery" mat-icon-button type="button">
+    <mat-icon [icIcon]="icMenu"></mat-icon>
+  </button>
+
+  <a *ngIf="isVerticalLayout$ | async" [routerLink]="['/']" class="ltr:mr-4 rtl:ml-4 block" fxLayout="row"
+    fxLayoutAlign="start center">
+    <img class="select-none" src="assets/img/logo-sm.png" style="width:80%;">
+    <!-- <h1 [fxHide]="mobileQuery" class="title ltr:pl-4 rtl:pr-4 m-0 select-none">VEX</h1> #} -->
+  </a>
+
+  <div fxLayout="row" class="current-datetime" fxHide fxShow.gt-sm>
+    <!-- <span class="heading-2 time-width">{{time}}</span>
+    <span class="heading-2 text-secondary">{{ampm}}</span>
+    <span class="separator"></span> -->
+    <span class="heading-2 mr-1">{{this.date.format('DD')}}</span>
+    <span class="heading-2 text-secondary">{{this.date.format('[de] MMMM [de] YYYY')}}</span>
+  </div>
+  <!-- 
+  <button class="" mat-button type="button" (click)="openAppointmentModal()">
+    <ic-icon [icon]="icHistory" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">Nueva Cita</span>
+  </button> -->
+
+  <!-- <button class="" mat-button type="button" (click)="selectRecord()">
+    <ic-icon [icon]="icFace" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">Nuevo Paciente</span>
+  </button>
+
+  <button class="" mat-button type="button" (click)="selectRecord()">
+    <ic-icon [icon]="icAppointment" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">Nueva Cita</span>
+  </button>
+
+-->
+  <button class="" mat-button type="button" color="primary" (click)="calendar()">
+    <ic-icon [icon]="icAppointment" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">Calendario</span>
+  </button>
+  <button (click)="openPatientsModal()" class="" color="primary" mat-button type="button" (click)="selectRecord()">
+    <ic-icon [icon]="icAcCircle" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">Nuevo Paciente</span>
+  </button>
+  <button (click)="home()" class="" color="primary" mat-button type="button">
+    <ic-icon [icon]="roundHome" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">Inicio</span>
+  </button>
+
+  <!-- <button class="" color="primary" mat-button type="button" >
+    <ic-icon [icon]="roundPermContactCalendar" inline="true" size="24px"></ic-icon>
+    <span class="ml-1">{{mes}}</span>
+  </button> -->
+
+  <span fxFlex></span>
+
+  <button class="text-yellow" color="" mat-button type="button" (click)="selectRecord()">
+    <ic-icon [icon]="icNotification" inline="true" size="24px"></ic-icon>
+  </button>
+
+  <div class="-mx-1 flex items-center ">
+    <div class="px-1">
+      <vex-toolbar-user></vex-toolbar-user>
+    </div>
+  </div>
+</div>
+
+<!-- <vex-navigation *ngIf="(isVerticalLayout$ | async) && isNavbarBelowToolbar$ | async"
+                [fxHide]="mobileQuery"></vex-navigation> -->

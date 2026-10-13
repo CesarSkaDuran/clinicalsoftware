@@ -1,0 +1,56 @@
+button:hover {
+    background-color: #07d544;
+    cursor: pointer;
+}
+
+button:focus {
+    background-color: #07d544;
+    color: white;
+}
+
+input:focus {
+    background: rgba(0, 128, 0, 0.295);
+    color: black;
+}
+
+mat-select:focus {
+    background: rgba(0, 128, 0, 0.295);
+    color: black;
+}
+.example-container .mat-form-field+.mat-form-field {
+    margin-left: 8px;
+}
+
+.example-right-align {
+    text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+}
+
+input.example-right-align {
+    -moz-appearance: textfield;
+}
+
+.numberAlign {
+    position: relative;
+    top: -3px;
+}
+
+::ng-deep {
+    .mat-form-field-appearance-outline .mat-form-field-outline {
+        color: green;
+    }
+
+    mat-form-field {
+
+        .mat-hint,
+        input,
+        ::placeholder,
+        .mat-form-field-label {
+            color: black;
+        }
+    }
+}

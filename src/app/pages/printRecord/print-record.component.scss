@@ -1,0 +1,52 @@
+@media print {
+    .page-break {
+        display: block;
+        page-break-before: auto;
+        page-break-after: auto;
+        page-break-inside: avoid !important;
+        float: none;
+    }
+
+    .print-block {
+        display: block !important;
+    }
+
+    .no-print {
+        display: none;
+    }
+}
+
+.h-130 {
+    height: 130px;
+}
+
+textarea {
+    height: 20px;
+    border: 0;
+}
+
+input {
+    height: 17px !important;
+    max-height: 17px !important;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.row_3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-gap: 10px;
+}
+.button-top {
+ margin-right: 5px;
+ padding: 5px;
+ border: solid;
+ border-color: #007effd9;
+ border-width: 1px;
+ border-radius: 20px;
+ /* margin: 23px; */
+ margin-top: 17px;
+ margin-bottom: 19px;
+     padding-left: 25px;
+     padding-right: 25px;
+}

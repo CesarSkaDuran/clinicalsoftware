@@ -1,0 +1,103 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+    <div fxLayout="column" fxFlex fxLayoutAlign="start stretch" class="sideform">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <h3 class="title">Examenes</h3>
+            <div fxFlex></div>
+            <button mat-flat-button color="primary" class="ml-12" (click)="save()" [disabled]="sending || !obs.valid">
+                Guardar
+            </button>
+        </div>
+        <br>
+        <form fxLayout="column" fxFlex [formGroup]="obs">
+
+            <div class="row" style="margin: 1px;" fxLayoutGap="20px">
+                <div class=" ">
+                    <h3>Radriografía Digital</h3>
+                    <br>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Intraorales</mat-label>
+                        <mat-select formControlName="radioIntraorales" multiple>
+                            <mat-option *ngFor="let name of radioIntraorales" [value]="name">{{name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Extraorales</mat-label>
+                        <mat-select formControlName="radioExtraorales" multiple>
+                            <mat-option *ngFor="let name of radioExtraorales" [value]="name">{{name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <h3>Fotografía Digital</h3>
+                    <br>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Intraorales</mat-label>
+                        <mat-select formControlName="fotoIntraorales" multiple>
+                            <mat-option *ngFor="let name of fotoIntraorales" [value]="name">{{name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+
+                        <mat-label>Extraorales</mat-label>
+                        <mat-select formControlName="fotoExtraorales" multiple>
+                            <mat-option *ngFor="let name of fotoExtraorales" [value]="name">{{name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class=" ">
+                    <h3>Modelos</h3>
+                    <br>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Modelos</mat-label>
+                        <mat-select formControlName="modelos" multiple>
+                            <mat-option *ngFor="let name of modelos" [value]="name">{{name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+
+                        <mat-label>Paquetes de diagnóstico</mat-label>
+                        <mat-select formControlName="paquete_diagnostico" multiple>
+                            <mat-option *ngFor="let name of paquete_diagnostico" [value]="name">{{name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Cefalometria</mat-label>
+                        <mat-select formControlName="cefalometria" multiple>
+                            <mat-option *ngFor="let name of cefalometria" [value]="name">{{name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <h3>Tomografia 3D</h3>
+                    <br>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Tomografía</mat-label>
+                        <mat-select formControlName="tomografia" multiple>
+                            <mat-option *ngFor="let name of tomografia" [value]="name">{{name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+            </div>
+            <mat-form-field style="width: 100%;" appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                <mat-label>Observacion</mat-label>
+                <textarea rows="4" matInput matAutosize matTextareaAutosize formControlName="obs"
+                    cdkAutosizeMinRows="9"></textarea>
+            </mat-form-field>
+        </form>
+    </div>
+</div>

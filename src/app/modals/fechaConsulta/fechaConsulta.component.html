@@ -1,0 +1,24 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+    <div fxLayout="column" fxFlex fxLayoutAlign="start stretch" class="sideform">
+        <div style="margin-top: 10px;margin-bottom: 20px;" fxLayout="row" fxLayoutAlign="start center">
+            <h3  class="title">Cambiar Fecha de Consulta</h3>
+        </div>
+        <form fxLayout="column" fxFlex [formGroup]="obs">
+          <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+              <mat-label>Fecha</mat-label>
+              <input matInput [matDatepicker]="datePicker" formControlName="created_at" placeholder="Seleccione"
+                  autocomplete="off" required />
+              <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+              <mat-datepicker #datePicker></mat-datepicker>
+          </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="end">
+
+                <button mat-stroked-button class="ml-5" (click)="close()">Cerrar</button>
+                <button mat-flat-button color="primary" class="ml-5" (click)="save()"
+                    [disabled]="sending || !obs.valid">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

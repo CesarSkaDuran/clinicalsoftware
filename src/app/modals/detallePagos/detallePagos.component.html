@@ -1,0 +1,124 @@
+
+<section class="cont-modal">
+  <div class="cont-content-modal">
+       <div fxLayoutAlign="space-around " class="cont-filtro">
+         <div class="etiquetas">
+           <strong>Detalle de pagos</strong>
+         </div>
+          <div class="etiquetas">
+                <strong>N° Recibo:</strong> {{dataPago.id}}
+        </div>
+       </div>
+      <div class="cont-table">
+        <table style="width: 100%;" mat-table [dataSource]="PagosTotal" class="table-100">
+          <ng-container matColumnDef="tipo_servicio">
+            <th mat-header-cell *matHeaderCellDef class="txt-left"> NOMBRE </th>
+            <td mat-cell *matCellDef="let element" class="txt-left"> {{element.nombre}} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef> FECHA </th>
+              <td mat-cell *matCellDef="let element"> {{element.created_at | date:"yyyy-MM-dd"}} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="liquidacion">
+              <th mat-header-cell *matHeaderCellDef> VALOR </th>
+              <td mat-cell *matCellDef="let element"> {{element.valor -1 | currency:'USD': 'symbol': '1.0'}} </td>
+          </ng-container>
+      
+          <!-- <ng-container matColumnDef="servicio">
+              <th mat-header-cell *matHeaderCellDef> ESTATUS </th>
+              <td mat-cell *matCellDef="let element"> {{element.status==1? 'Pagado' : 'Pendiente'}} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="total">
+              <th mat-header-cell *matHeaderCellDef> ACCION </th>
+              <td mat-cell *matCellDef="let element"> 
+                <button class="btn-bg-azul" >PAGAR</button> </td>
+          </ng-container> -->
+          
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+      <!-- <div style="padding: 10px;" fxLayout="row">
+      
+
+      </div> -->
+      <div  class="column" fxFlexAlign="end">
+       
+        <div class="cont-bloque" style="flex-grow: 3;">
+            <div class="etiquetas">
+              <h5 style="text-align: end;"><strong>Sub total:</strong> {{totales| currency:'USD': 'symbol': '1.0'}}</h5>
+            </div>
+            <!-- <input placeholder="Observación" class="input-buscar"  type="text"> -->
+          </div>
+           <hr>
+           <!-- <div class="cont-bloque" style="flex-grow: 3;">
+             <div class="etiquetas">
+               <h5 style="text-align: end;"><strong>4 * 1000:</strong>
+                 {{ dataPago.cuatroxmil == 0 ? 0 : totales  / 1000 * 4 | currency:'USD': 'symbol': '1.0'}}</h5>
+             </div>
+            
+           </div> -->
+          
+          <hr>
+          <div class="cont-bloque" style="flex-grow: 3;">
+            <div class="etiquetas">
+              <h5 style="text-align: end;"><strong>Iva:</strong> {{totales * dataPago.iva / 100| currency:'USD': 'symbol': '1.0'}}</h5>
+            </div>
+            <!-- <input placeholder="Observación" class="input-buscar"  type="text"> -->
+          </div>
+               <hr>
+        <div class="cont-bloque" style="flex-grow: 3;">
+          <div class="etiquetas">
+            <h5 style="text-align: end;"><strong>Valor a pagar:</strong>
+              {{  dataPago.cuatroxmil == 0 ? totales + totales * dataPago.iva / 100 : totales + totales * dataPago.iva / 100 +  totales  / 1000 * 4 | currency:'USD': 'symbol': '1.0'}}
+              </h5>
+          </div>
+          <!-- <input placeholder="Observación" class="input-buscar"  type="text"> -->
+        </div>
+      </div>
+      </div>
+  <br><br>
+  <div class="column">
+
+    <form fxLayoutAlign="start" fxLayout="column" fxFlex.gt-xs class="form-container" [formGroup]="filters">
+      <div fxLayout="column" fxFlex.gt-xs fxLayout.xs="column" fxItemAlign="center" fxLayoutGap="24px"
+        fxLayoutGap.xs="12px">
+        <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+          <mat-label>Bancos</mat-label>
+          <mat-select formControlName="banco_id" placeholder="..." #singleSelect>
+            <mat-option *ngFor="let data of BancoTotal" [value]="data.id">{{data.nombre}}
+              </mat-option>
+
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+          <mat-label>Medico</mat-label>
+          <mat-select formControlName="medico" placeholder="..." #singleSelect>
+            <mat-option *ngFor="let data of remisiones" [value]="data.id">{{data.nombre}}
+            </mat-option>
+        
+          </mat-select>
+        </mat-form-field>
+      
+      </div>
+    </form>
+
+  </div>
+<div class="row" fxLayoutAlign="end">
+     
+  <div *ngIf="status == 2" class="cont-btns-modal">
+       <button [disabled]="!filters.valid" (click)="saveCuentaCobro()" mat-flat-button color="primary">
+         REALIZAR PAGO
+       </button>
+     </div>
+
+  <div class="cont-btns-modal">
+      <button (click)="close()" mat-flat-button class="btn-azul-modal">SALIR</button>
+  </div>
+
+</div>
+</section>

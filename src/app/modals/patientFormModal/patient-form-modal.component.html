@@ -1,0 +1,138 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Información del Paciente</h2>
+</div>
+<mat-dialog-content style="height: 418px;">
+  <form fxLayout="column" [formGroup]="patient">
+    <!-- <perfect-scrollbar fxLayout="column" style="max-height: 424px;padding: 0 18px;"> -->
+    <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Nombre completo</mat-label>
+      <input matInput placeholder="..." formControlName="name"  />
+    </mat-form-field>
+    <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+             <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+               <mat-label>Tipo de documento</mat-label>
+               <mat-select placeholder="Selecciona" formControlName="TipoDocumento" >
+                 <mat-option value="1">Cedula</mat-option>
+                 <mat-option value="2">Tarjeta de identidad</mat-option>
+                 <mat-option value="3">Cedula de extranjeria</mat-option>
+                 <mat-option value="4">Pasaporte</mat-option>
+                 <mat-option value="5">Registro Civil</mat-option>
+                </mat-select>
+             </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Numero de documento</mat-label>
+        <input matInput placeholder="..." formControlName="identification"  />
+      </mat-form-field>
+    </div>
+     <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+         <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+          <mat-label>Sexo</mat-label>
+          <mat-select formControlName="sex">
+            <mat-option value="Masculino">Masculino</mat-option>
+            <mat-option value="Femenino">Femenino</mat-option>
+          </mat-select>
+        </mat-form-field>
+       <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+         <mat-label>Estado Civil</mat-label>
+         <mat-select placeholder="Selecciona" formControlName="civil_status" >
+           <mat-option value="1">Soltero/a</mat-option>
+           <mat-option value="2">Casado/a</mat-option>
+           <mat-option value="3">Unión Libre</mat-option>
+           <mat-option value="4">Divorciado/a</mat-option>
+           <mat-option value="5">Viudo/a</mat-option>
+           <mat-option value="6">Otro</mat-option>
+         </mat-select>
+       </mat-form-field>
+     </div>
+    <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class=" bold-form" floatLabel="always">
+        <mat-label>Profesión</mat-label>
+        <input matInput placeholder="..." formControlName="position" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="no-pad bold-form" floatLabel="always">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="birthPicker" formControlName="birth_date" placeholder="Seleccione"
+          autocomplete="off"  />
+        <mat-datepicker-toggle matSuffix [for]="birthPicker"></mat-datepicker-toggle>
+        <mat-datepicker #birthPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Teléfonos</mat-label>
+        <input matInput placeholder="..." formControlName="phone" />
+      </mat-form-field>
+       <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form mb-4" floatLabel="always">
+         <mat-label>Dirección</mat-label>
+         <input matInput placeholder="..." formControlName="address" />
+       </mat-form-field>
+      <!-- <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Empresa</mat-label>
+        <input matInput placeholder="..." formControlName="company" />
+      </mat-form-field> -->
+      <!-- <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>EPS</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="eps" >
+          <mat-option value="{{eps.id}}" *ngFor="let eps of epss">{{eps.name}}</mat-option>
+          
+        </mat-select>
+      </mat-form-field> -->
+    </div>
+    <!-- <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+     <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>ARL</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="arl" >
+          <mat-option value="{{arl.id}}" *ngFor="let arl of arls">{{arl.name}}</mat-option>
+          
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Pensión</mat-label>
+        <mat-select placeholder="Selecciona" formControlName="pension" >
+          <mat-option value="{{pension.id}}" *ngFor="let pension of pensions">{{pension.name}}</mat-option>
+          
+        </mat-select>
+      </mat-form-field> 
+    </div> -->
+   
+    <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Nombre de acompañante</mat-label>
+        <input matInput placeholder="..." formControlName="partner_name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+        <mat-label>Teléfono de acompañante</mat-label>
+        <input matInput placeholder="..." formControlName="partner_profession" />
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayout.xs="column"  fxLayoutGap="16px">
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput placeholder="..." formControlName="email" />
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" fxFlex.gt-xs class="bold-form" floatLabel="always">
+         <mat-label>Grupo Sanguineo</mat-label>
+         <mat-select placeholder="Selecciona" formControlName="grupo_sanguineo">
+           <mat-option value="A+">A+</mat-option>
+           <mat-option value="O+">O+</mat-option>
+           <mat-option value="B+">B+</mat-option>
+           <mat-option value="AB+">AB+</mat-option>
+           <mat-option value="A-">A-</mat-option>
+           <mat-option value="B-">B-</mat-option>
+           <mat-option value="O-">O-</mat-option>
+           <mat-option value="AB-">AB-</mat-option>
+         </mat-select>
+       </mat-form-field>
+    </div>
+    <!-- <mat-checkbox formControlName="create_user" [hidden]="data?.patient?.id !== null && data?.patient?.id !== undefined">Crear paciente en ClinicalSoftware</mat-checkbox> -->
+    <!-- </perfect-scrollbar> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()" [disabled]="sending || !patient.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

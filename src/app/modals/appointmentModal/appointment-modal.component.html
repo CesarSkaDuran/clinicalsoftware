@@ -1,0 +1,105 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Cita</h2>
+</div>
+<mat-dialog-content style="height: 390px;">
+   <form fxLayout="column" fxLayout.gt-xs="row" fxFlex.gt-xs [formGroup]="obs">
+    <div fxLayout="column" fxFlex.gt-xs class="p-3">
+      <div fxLayout="row" fxLayoutAlign="start center" class="mb-4" [hidden]="showOnlyName">
+        <mat-form-field appearance="outline" class="bold-form" floatLabel="always" fxFlex.gt-xs>
+          <mat-label>Paciente</mat-label>
+          <mat-select formControlName="patient" placeholder="Paciente" #singleSelect>
+            <mat-option>
+              <ngx-mat-select-search [formControl]="patientFilterCtrl"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let patient of filteredPatients | async" [value]="patient">
+              {{patient.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-stroked-button (click)="openNewPatient()" color="primary" class="ml-2" [hidden]="showOnlyName">Nuevo</button>
+      </div>
+      <div [hidden]="!showOnlyName" class="mb-4">
+        <h4 class="mb-2">Paciente</h4>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <h3 fxFlex>{{data.appointment?.name}}</h3>
+          <button mat-stroked-button color="primary" (click)="openPatientModal(data.appointment)">Detalles</button>
+        </div> 
+      </div>
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option value="1">Agendada</mat-option>
+          <mat-option value="2">Por confirmar</mat-option>
+          <mat-option value="3">Finalizada</mat-option>
+          <mat-option value="4">Cancelada</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Motivo</mat-label>
+        <textarea
+          matInput
+          matAutosize
+          matTextareaAutosize
+          formControlName="reason"
+          rows="3"
+        ></textarea>
+      </mat-form-field>
+      <!-- <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Forma de pago</mat-label>
+        <mat-select formControlName="payment_type">
+          <mat-option value="1">Efecty / Baloto / SURED</mat-option>
+          <mat-option value="4">Consignación / Trasferencia</mat-option>
+          <mat-option value="5">Pagar en el consultorio</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+    </div>
+    <div fxLayout="column" fxFlex.gt-xs class="p-3">
+        <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+          style="flex-grow: 2; width:100%">
+          <mat-label>Doctor</mat-label>
+          <mat-select formControlName="remision_id">
+            <mat-option *ngFor="let data of remisiones;" value="{{data.id}}">
+              {{data.nombre}} | {{data.especializacion}}
+            </mat-option>
+
+          </mat-select>
+        </mat-form-field>
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="date" placeholder="Seleccione" autocomplete="off"
+          required />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+  
+      <!-- <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="type" required (valueChange)="onTypeChange($event)">
+         <mat-option value="1">Presencial</mat-option>
+         <mat-option value="2">Virtual</mat-option>
+       </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Valor</mat-label>
+        <input matInput type="number" min="0" placeholder="..." formControlName="value" required />
+      </mat-form-field> -->
+  
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Hora Inicio</mat-label>
+        <input matInput type="time" placeholder="..." formControlName="time" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+        <mat-label>Hora Fin</mat-label>
+        <input matInput type="time" placeholder="..." formControlName="end_time" />
+      </mat-form-field>
+    </div>
+   </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()" [disabled]="sending || !obs.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

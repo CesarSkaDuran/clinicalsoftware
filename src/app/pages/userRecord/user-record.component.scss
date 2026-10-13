@@ -1,0 +1,225 @@
+figcaption {
+    display: none;
+    transition: all .5s;
+}
+
+/* Visible texto */
+figure:hover>figcaption {
+    display: block;
+    transition: all .5s;
+}
+.msgStyle{
+     background: #ff2020;
+     border-radius: 10px;
+     padding: 5px;
+     color: white;
+     font-weight: 500;
+     position: fixed;
+     top: 110px;
+
+}
+.text-inside-grid {
+    position: absolute;
+    left: 5px;
+}
+
+.panel-red.mat-select-panel {
+    background: rgba(255, 0, 0, 0.5);
+}
+
+.panel-green.mat-select-panel {
+    background: rgba(0, 255, 0, 0.5);
+}
+
+.panel-blue.mat-select-panel {
+    background: rgba(0, 0, 255, 0.5);
+}
+
+.cuadrado {
+
+    background-color: rgb(221, 176, 176);
+
+    color: red;
+
+}
+
+.secundario {
+    background-color: rgb(147, 223, 147);
+    color: #416ade;
+    border: none;
+
+}
+
+.tercero {
+    background-color: white;
+}
+
+.cuarto {
+    background-color: rgb(154, 154, 236);
+}
+
+.table_rigth {
+    margin-bottom: 20px;
+    position: relative;
+    right: 1%;
+    width: 46%;
+    border-radius: 10px 10px 0px 0px;
+    border: 0;
+
+}
+
+.table_rigth_p {
+    margin-bottom: 20px;
+    position: relative;
+    right: -18%;
+    width: 27%;
+
+}
+
+.table_rigth_p1 {
+    margin-bottom: 20px;
+    position: relative;
+    right: -51%;
+    width: 27%;
+
+}
+
+.div_table {
+    width: 101%;
+    height: 0;
+
+
+}
+
+.table_left {
+    margin-bottom: 20px;
+    position: relative;
+    right: -51%;
+    width: 48%;
+    border-radius: 10px 10px 0px 0px;
+    border: 0;
+}
+
+.th_table {
+    border: 0;
+    height: 70px;
+    border-radius: 10px 10px 0 0;
+
+}
+
+.tr_table {
+    border: 0;
+    height: 70px;
+    border-radius: 0px 0px 10px 10px;
+
+}
+
+.table_left_top {
+    border-radius: 0px 0px 10px 10px;
+    margin-bottom: 20px;
+    position: relative;
+    right: -51%;
+    width: 48%;
+    border: 0;
+
+}
+
+.table_right_top {
+    margin-bottom: 20px;
+    position: relative;
+    right: 1%;
+    width: 46%;
+    border-radius: 0px 0px 10px 10px;
+    border: 0;
+}
+		.desabilitado {
+		    fill: black;
+		    stroke: black;
+		    stroke-width: 1px;
+		    opacity: 0.3;
+		}
+
+		.marcadoAzul {
+		    fill: none;
+		    stroke: blue;
+		    stroke-width: 7px;
+		}
+
+		.marcadoVerde {
+		    fill: green;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.marcadoMorado {
+		    fill: #CC66CC;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.marcadoMarron {
+		    fill: #CC6600;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.marcadoAmarillo {
+		    fill: yellow;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.marcadoRojo {
+		    fill: red;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.marcadoNaranja {
+		    fill: orange;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.marcadoTomate {
+		    fill: tomato;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.diente {
+		    fill-opacity: 0;
+		    stroke: black;
+		    stroke-width: 1px;
+		}
+
+		.ausente {
+		    fill: none;
+		    opacity: 0;
+		}
+
+		.corona {
+		    fill: none;
+		    opacity: 0;
+		}
+
+		.endodoncia {
+		    fill: none;
+		    opacity: 0;
+		}
+
+		.implante {
+		    fill: none;
+		    opacity: 0;
+		}
+		.number_style{
+			background: #01277b;
+			border-radius: 30px;
+			padding: 15px;
+			color: white;
+			font-weight: bold;
+		}
+
+	.text-mayus{
+		text-transform: capitalize;
+	}

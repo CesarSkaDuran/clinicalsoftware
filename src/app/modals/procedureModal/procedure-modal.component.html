@@ -1,0 +1,28 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <h2 mat-dialog-title class="title text-black-600">Procedimiento</h2>
+</div>
+<mat-dialog-content style="height: 322px;">
+  <form fxLayout="column" fxFlex.gt-xs [formGroup]="procedure">
+
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Código</mat-label>
+      <input matInput placeholder="..." formControlName="code" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+      <mat-label>Descripción</mat-label>
+      <input matInput placeholder="..." formControlName="description" required />
+    </mat-form-field>
+        <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
+          <mat-label>Tipo de procedimiento </mat-label>
+          <input matInput placeholder="..." formControlName="tipo_procedimiento" required />
+        </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()" [disabled]="sending || !procedure.valid" color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>

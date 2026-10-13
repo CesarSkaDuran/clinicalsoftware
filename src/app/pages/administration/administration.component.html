@@ -1,0 +1,225 @@
+<vex-page-layout @stagger>
+  <div class="home-card" style="padding: 45px;">
+    <div class="margin-content">
+      <h1 class="display-1 font-medium mt-4">Lista de pagos</h1>
+    </div>
+  </div>
+  <vex-page-layout-content fxLayout="column">
+    <!-- <div fxLayout="row" fxLayoutAlign="start center" class="mb-6">
+      <h1 class="display-1 font-medium mt-4">Ingresos Diarios</h1>
+    </div> --> 
+    <div class="home-card overflow-auto p-10" fxLayout="column">
+        <div fxLayout="row" fxflex class=" table-controls" fxLayoutGap="8px">
+          <form fxLayout="column" fxFlex.gt-xs class="form-container" [formGroup]="filters">
+            <div fxLayout="row" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+              fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+              fxLayoutGap.xs="12px">
+              <mat-form-field appearance="outline" style="width: 100%;" fxFlexAlign.xs="stretch"
+                class="blue no-pad bold-form" floatLabel="always">
+                <mat-label>Buscar</mat-label>
+                <input matInput (keyup)="searchKeyUp($event)" (keyup.shift.n)="openIncomeModal()" #search
+                  placeholder="Ingrese nombre paciente, medico o documento" formControlName="search" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" style="width: 100%;" fxFlexAlign.xs="stretch"
+                class="blue no-pad bold-form" floatLabel="always">
+                <mat-label>Fecha Inicial</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha"
+                  autocomplete="off" (dateChange)="dateChange($event)" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 100%;" fxFlexAlign.xs="stretch"
+                class="blue no-pad bold-form" floatLabel="always">
+                <mat-label>Fecha Final</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="date2" placeholder="Rango de fecha"
+                  autocomplete="off" (dateChange)="dateChange($event)" />
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+
+              <div>
+                <ul class="nav">
+                  <li
+                    style=" width: 150px; margin-left: 5px; height: 52px; border: solid; border-color: #836d96; border-width: 2px;"
+                    class="liStyle" fxLayoutAlign="start">
+                    <a class="alink">Estado
+                      <ic-icon class="iconoStyle" [icon]="twotoneArrowDropDown" inline="true" size="35px">
+                      </ic-icon>
+                    </a>
+                    <ul style="border-radius: 5px; " class="border border-secondary">
+                      <li (click)="filterAfiliacion('0')">
+                        <a>
+                          <button style="text-align:initial">
+                            ESTADO</button>
+                        </a>
+                      </li>
+                      <li>
+                        <a (click)="filterAfiliacion('1')">
+                          <button style="text-align:initial">
+                            Pagado
+                          </button>
+                        </a>
+                      </li>
+                      <li>
+                        <a (click)="filterAfiliacion('2')">
+                          <button style="text-align:initial">Pendiente</button>
+                        </a>
+                      </li>
+
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+        
+            </div>
+          </form>
+        </div>
+      <div fxLayout="row" class="mb-9 mt-6" fxFlex.gt-xs fxLayout.xs="column" fxLayoutAlign="start center"
+        fxLayoutAlign.sm="start start" fxItemAlign="center" fxItemAlign.xs="start" fxLayoutGap="24px"
+        fxLayoutGap.xs="12px">
+
+        <h3 class="headline" fxFlex>Total: {{total | currency:'USD': 'symbol': '1.0'}}</h3>
+        <h3 class="headline" fxFlex>Total Pagado: {{totalPagado | currency:'USD': 'symbol': '1.0'}}</h3>
+        <h3 class="headline" fxFlex>Total Pendiente: {{totalIncome | currency:'USD': 'symbol': '1.0'}}</h3>
+        <button mat-flat-button color="primary" (click)="openDateModal()">
+          <mat-icon>request_quote</mat-icon>
+          Facturar Procedimiento
+        </button>
+        <button mat-flat-button color="primary" (click)="openIncomeModal()">
+          <mat-icon>data_saver_on</mat-icon>
+          Nuevo Ingreso
+        </button>
+      </div>
+      <!-- table -->
+      <table @stagger [dataSource]="afiliacionFilter" class="table-100" mat-table matSort>
+        <!-- Type Column -->
+
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef >Cliente</th>
+          <td mat-cell *matCellDef="let row" class=" text-secondary">
+            <div fxLayout="row" fxLayoutAlign="center">
+              {{row?.tercero?.nombre }}
+            </div>
+          </td>
+        </ng-container>
+        <!-- Type Column -->
+        <ng-container matColumnDef="nit">
+          <th mat-header-cell *matHeaderCellDef >Nit/Cc</th>
+          <td mat-cell *matCellDef="let row" class=" text-secondary">
+            {{row?.tercero?.documento}}
+          </td>
+        </ng-container>
+        <!-- Code Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef >Doctor</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="column" fxLayoutAlign="center ">
+              <span class="date text-secondary">{{ row.nombre_empresa }}</span>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef >Fecha</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="column" fxLayoutAlign="center ">
+              <span class="date text-secondary">{{ changeDateTimeFormat(row.fecha) }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date2">
+          <th mat-header-cell *matHeaderCellDef >Fecha de pago</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="column" fxLayoutAlign="center ">
+              <span class="date text-secondary">{{ changeDateTimeFormat(row.updated_at) }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="concept">
+          <th mat-header-cell *matHeaderCellDef >Concepto</th>
+          <td mat-cell *matCellDef="let row">
+            {{row.nombre}}
+          </td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef >Estado</th>
+          <td mat-cell *matCellDef="let row">
+            <button>
+              <span [ngStyle]="{'background-color': row.status === 1 ? 'green' : row.status === 2 ?
+                                        'orange' : row.status === 3 ? 'blue' : row.status === 4 ? 'green' : row.status ===
+                                        5? 'red' :''}" style="width: 150px; font-weight: bold; padding: 5px;
+                                        border-radius: 10px; color:white">
+                {{ row.status == 1 ? "Pagado": row.status == 2 ? "Pendiente": row.status == 3 ? "EN TRAMITE": row.status == 4 ? "ACTIVO": row.status == 5 ? "RECHAZADO":"" }}
+
+              </span>
+            </button>
+
+          </td>
+        </ng-container>
+
+        <!-- Distribuitor Column -->
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef >Valor</th>
+          <td mat-cell *matCellDef="let row" class=" text-blue-600">
+            {{ row.valor  | currency:'USD': 'symbol': '1.0'}}
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef >Opciones</th>
+          <td mat-cell *matCellDef="let element" class="center ">
+            <div fxLayout="row" fxLayoutAlign="center">
+
+              <!-- <button (click)="openModal(element)" mat-menu-item>
+               <mat-icon  style="color:rgb(4, 4, 73)">paid</mat-icon>
+             </button> -->
+              <button *ngIf="element.status == 2" style="border-radius: 10px; margin-right: 10px;" mat-flat-button
+                color="primary"
+                (click)="openModal(element)"> Pagar</button>
+              <button (click)="openPresupuesto(element)" mat-menu-item>
+                <mat-icon style="color:rgb(4, 4, 73)">remove_red_eye</mat-icon>
+              </button>
+              <button *ngIf="element.status == 2" (click)="delete(element)" mat-menu-item>
+               <mat-icon  style="color:red">delete</mat-icon>
+             </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div [hidden]="data.length > 0" class="pt-9 pb-9">
+        <div class="alternate-result">
+          <div fxLayout="row" fxFlex fxLayoutAlign="center center">
+            <div [hidden]="!loadingRecords">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <mat-spinner diameter="32"></mat-spinner>
+                <span>CARGANDO</span>
+              </div>
+            </div>
+            <div [hidden]="loadingRecords || data.length > 0">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <span class="text-secondary headline-1">NO HAY RESULTADOS</span>
+                <span class="text-secondary headline-1">CREA UN NUEVO INGRESO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator [length]="resultsLength" (page)="pageChange($event)" [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="pageSize" class="sticky left-0">
+      </mat-paginator>
+    </div>
+  </vex-page-layout-content>
+
+
+</vex-page-layout>

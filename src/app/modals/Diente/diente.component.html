@@ -1,0 +1,255 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+    <div fxLayout="column" fxFlex fxLayoutAlign="start stretch" class="sideform">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <h3 class="title">preexistencia</h3>
+            <div fxFlex></div>
+            <button mat-flat-button color="primary" class="ml-12" (click)="save()" [disabled]="sending || !obs.valid">
+                Guardar
+            </button>
+        </div>
+        <br>
+        <form fxLayout="column" fxFlex [formGroup]="obs">
+            <div fxFlex></div>
+            <div class="row" style="margin: 1px;" fxLayoutGap="5px">
+                <div class=" ">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Diente Sano</mat-label>
+                        <mat-select formControlName="diente_sano">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2; width:100%">
+                        <mat-label>Endodoncia</mat-label>
+                        <mat-select formControlName="endodoncia">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">Buen Estado</mat-option>
+                            <mat-option value="NO">Mal Estado</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class=" ">
+                     <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                         style="flex-grow: 2; width:100%">
+                         <mat-label>Ausente</mat-label>
+                         <mat-select formControlName="ausente">
+                             <mat-option></mat-option>
+                             <mat-option value="SI">SI</mat-option>
+                             <!-- <mat-option value="NO">NO</mat-option> -->
+                         </mat-select>
+                     </mat-form-field>
+        
+                         <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                             style="flex-grow: 2; width:100%">
+                             <mat-label>Corona</mat-label>
+                             <mat-select formControlName="corona">
+                                 <mat-option></mat-option>
+                                 <mat-option value="SI">Buen Estado</mat-option>
+                                 <mat-option value="NO">Mal Estado</mat-option>
+                             </mat-select>
+                         </mat-form-field>
+                </div>
+                <div class=" ">
+                      <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                          style=" width:100%">
+                          <mat-label>Sellante</mat-label>
+                          <mat-select formControlName="sellante">
+                              <mat-option></mat-option>
+                              <mat-option value="SI">Bueno</mat-option>
+                              <mat-option value="NO">Desadaptado</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style=" width:100%">
+                        <mat-label>Póntico</mat-label>
+                        <mat-select formControlName="exodoncia">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class=" ">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style="flex-grow: 2; width:100%">
+                        <mat-label>Resina</mat-label>
+                        <mat-select formControlName="restauracion">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">Adaptada</mat-option>
+                            <mat-option value="NO">Desadaptada</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style=" width:100%">
+                        <mat-label>Protesis Removible</mat-label>
+                        <mat-select formControlName="protesis_removible">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxLayout="row" style="margin: 1px;" fxLayoutGap="5px">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Implante</mat-label>
+                        <mat-select formControlName="implante">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">Buen Estado</mat-option>
+                            <mat-option value="NO">Mal Estado</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Perno Muñon</mat-label>
+                        <mat-select formControlName="perno_munon">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">Buen Estado</mat-option>
+                            <mat-option value="NO">Mal Estado</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+    
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Corona Provicional</mat-label>
+                        <mat-select formControlName="corona_provisional">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always" style=" width:100%">
+                        <mat-label>Amalgama</mat-label>
+                        <mat-select formControlName="amalgama">
+                            <mat-option></mat-option>
+                            <mat-option value="1">Adaptada</mat-option>
+                            <mat-option value="2">Desadaptada</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+            </div>
+            <div class=" ">
+                <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:100%">
+
+                    <mat-label>otros</mat-label>
+                    <mat-select formControlName="otros">
+                        <mat-option></mat-option>
+                        <mat-option value="SI">SI</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <h3 class="title">Lesiones</h3>
+
+            <div fxFlex></div>
+            <div class="row" style="margin: 1px;" fxLayoutGap="5px">
+                <div class=" ">
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Caries</mat-label>
+                        <mat-select formControlName="caries">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Infección pulpar</mat-label>
+                        <mat-select formControlName="infeccion_pulpar">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class=" ">
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Fractura</mat-label>
+                        <mat-select formControlName="fractura">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Movilidad</mat-label>
+                        <mat-select formControlName="movilidad">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class=" ">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Resto radicular</mat-label>
+                        <mat-select formControlName="residuo_radical">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Extracion indicada</mat-label>
+                        <mat-select formControlName="erosion">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class=" ">
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Desgaste</mat-label>
+                        <mat-select formControlName="desgaste">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                        style="flex-grow: 2; width:100%">
+                        <mat-label>Retracción gingival</mat-label>
+                        <mat-select formControlName="cuello">
+                            <mat-option></mat-option>
+                            <mat-option value="SI">SI</mat-option>
+
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <br>
+            <div style="padding-top: 5px;" class="cont-a-a" fxLayout="row">
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="pieza_completa">Pieza Completa
+                </mat-checkbox>
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="Mezial">Mesial</mat-checkbox>
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="distal">Distal</mat-checkbox>
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="oclusal">Oclusal</mat-checkbox>
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="palatina">Palatina</mat-checkbox>
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="lingual">Lingual</mat-checkbox>
+
+                <mat-checkbox style="padding-right: 15px;" formControlName="cervical">Cervical</mat-checkbox>
+
+                <mat-checkbox formControlName="vestibular">Vestibular</mat-checkbox>
+
+            </div>
+            <mat-form-field style="width: 100%;" appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                <mat-label>Observacion</mat-label>
+                <textarea rows="4" matInput matAutosize matTextareaAutosize formControlName="obs"
+                    cdkAutosizeMinRows="9"></textarea>
+            </mat-form-field>
+        </form>
+    </div>
+</div>

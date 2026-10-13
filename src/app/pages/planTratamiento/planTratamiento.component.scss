@@ -1,0 +1,32 @@
+figcaption {
+    display: none;
+    transition: all .5s;
+}
+
+/* Visible texto */
+figure:hover>figcaption {
+    display: block;
+    transition: all .5s;
+}
+
+
+.button-top {
+    margin-right: 20px;
+    /* background: #ffffff; */
+    padding: 15px;
+    border: solid;
+    border-color: #007effd9;
+    border-width: 1px;
+    border-radius: 20px;
+}
+
+.msgStyle {
+    background: #ff2020;
+    border-radius: 10px;
+    padding: 5px;
+    color: white;
+    font-weight: 500;
+    position: relative;
+    top: 10px;
+
+}

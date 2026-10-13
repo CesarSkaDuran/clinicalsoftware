@@ -1,0 +1,36 @@
+<div style="text-align:center">
+  <div class="row container">
+    <div>
+      <h3>TOMAR FOTO</h3>
+      <webcam [height]="350" [width]="520" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+        *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+        [videoOptions]="videoOptions" (cameraSwitched)="cameraWasSwitched($event)" (initError)="handleInitError($event)">
+      </webcam>
+    </div>
+    <div [hidden]="!showOnlyName">
+      <h3>FOTO ACTUAL</h3>
+      <img style="height: 350px;" [src]="currentPatientPicture" />
+    </div>
+  </div>
+<br>
+    <button mat-button (click)="triggerSnapshot()" [disabled]="sending">TOMAR FOTO</button>
+    <button mat-button (click)="showNextWebcam(true);" [disabled]="sending">REINICIAR</button>
+    
+</div>
+<!-- 
+   <div class="snapshot" *ngIf="webcamImage">
+     <img [src]="webcamImage.imageAsDataUrl == '' ? currentPatientPicture : webcamImage.imageAsDataUrl " />
+   </div> -->
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="sending">Cancelar</button>
+  <button mat-flat-button (click)="save()"  color="primary">
+    <span *ngIf="!sending">Guardar</span>
+    <mat-spinner diameter="24" *ngIf="sending"></mat-spinner>
+  </button>
+</mat-dialog-actions>
+
+<h4 *ngIf="errors.length > 0">Messages:</h4>
+<ul *ngFor="let error of errors">
+  <li>{{error | json}}</li>
+</ul>

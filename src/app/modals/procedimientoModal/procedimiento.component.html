@@ -1,0 +1,176 @@
+<div fxLayout="row" fxLayoutAlign="start stretch" class="h-100">
+    <div fxLayout="column" fxFlex fxLayoutAlign="start stretch" class="sideform">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <h3 [hidden]="showOnlyName" style="color:gray" class="title">Nuevos Procedimiento</h3>
+            <h3 [hidden]="!showOnlyName" style="color:gray" class="title">Nueva Evolucion</h3>
+            <div fxFlex></div>
+             <button  [hidden]="!diente" mat-flat-button
+                 color="primary" class="ml-12" (click)="save()"
+                 (click)="savePlanStatus()"
+                 [disabled]="sending || !obs.valid"
+                 >
+                 Guardar
+             </button>
+            <button [ngStyle]="{'display': diente ? 'none' :''}" [hidden]="showOnlyName" mat-flat-button
+                color="primary" class="ml-12" (click)="save()"
+                [disabled]="sending || !obs.valid">
+                Guardar y continuar
+            </button>
+  
+        </div>
+        <br>
+        <form fxLayout="column" fxFlex [formGroup]="obs">
+            <div fxFlex></div>
+            <div fxLayoutAlign="space-between" [hidden]="!showOnlyName" *ngFor="let data of dataAny;" class="row" style="margin: 1px;"
+                fxLayoutGap="40px">
+                
+                <div class="column">
+                    <h2 style="font-size: revert;"><strong>Categoria:</strong> {{data?.categoria}} </h2>
+                    <h2 style="font-size: revert;"><strong>Valor de procedimiento:</strong> {{data?.valor | currency:'USD': 'symbol': '1.0'}} </h2>
+                    <h2 style="font-size: revert;"><strong>Sesiones:</strong> {{data?.suma_sesion == null ? 0 : data?.suma_sesion}} de
+                        {{data?.sesiones == null ? 0 : data?.sesiones }} </h2>
+                    <!-- <h2 style="font-size: revert;"><strong>Sesiones:</strong> {{data?.cantidad}} </h2> -->
+                </div>
+                <div class="column">
+                    <h2 style="font-size: revert;"> <strong>Procedimiento:</strong> {{data?.procedimiento}}</h2>
+                    <h2 style="font-size: revert;"> <strong>pieza:</strong> {{data?.pieza}}</h2>
+                    <h2 style="font-size: revert;"> <strong>Valor de sesión:</strong> {{data?.valor_sesion | currency:'USD': 'symbol': '1.0'}}</h2>
+                </div>
+            </div>
+            <br>
+        
+            <div [hidden]="showOnlyName" fxLayout="row" style="margin: 1px;" fxLayoutGap="5px">
+
+                <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:100%">
+                    <mat-label>Categoria</mat-label>
+                    <mat-select formControlName="categoria">
+                        <mat-option *ngFor="let data of categoria;" value="{{data.nombre}}"
+                            (click)="setCategoriaSeleccionado(data.id)">
+                            {{data.nombre}}
+                        </mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+
+
+                <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:85%">
+                    <mat-label>Procedimiento</mat-label>
+                    <mat-select (valueChange)="onTypeChange($event)" formControlName="procedimiento">
+                        <ng-container matColumnDef="item" *ngFor="let data of Procedimiento;">
+                            <mat-option *ngIf="data.categoria_id==categoriaSelect"
+                                 (click)="setValorSeleccionado(data.valor1)"
+                                 value="{{data.nombre}}">
+                                {{data.nombre}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+                <button>
+
+                    <mat-icon (click)="openModal()" style="margin-right: 30px;
+                                        margin-top: -15px;
+                                        font-size: 50px;
+                                        color: indigo;"
+                                         aria-hidden="false" aria-label="Example home icon">
+                                         add_circle_outline
+                                        </mat-icon>
+                </button>
+            </div>
+
+            <div fxLayout="row" style="margin: 1px;" fxLayoutGap="5px">
+     
+                <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:100%">
+                    <mat-label>Pieza</mat-label>
+                    <input matInput type="number" placeholder="..." formControlName="pieza" />
+                </mat-form-field>
+                <!-- <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:100%">
+                    <mat-label>Valor</mat-label>
+                    <mat-select formControlName="valor">
+
+                        <ng-container matColumnDef="item" *ngFor="let data of Procedimiento;">
+                            <mat-option *ngIf="data.id==valorSelect" value="{{data.valor1}}">
+                                {{data.valor1}}
+                            </mat-option>
+                            <mat-option *ngIf="data.id==valorSelect" value="{{data.valor2}}">
+                                {{data.valor2}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                  
+                </mat-form-field> -->
+                <mat-form-field *ngIf="showOnlyName === true"  appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:100%">
+                    <mat-label>Tipo Pago</mat-label>
+                    <mat-select required formControlName="tipo_pago">
+
+                        <ng-container matColumnDef="item">
+                            <mat-option  value="1">
+                            Pago Contado 
+                            </mat-option>
+                            <mat-option  value="2">
+                            Abono
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                  
+                </mat-form-field>
+                     <mat-form-field appearance="outline" class="mb-4 bold-form" style="flex-grow: 2; width:100%">
+                         <mat-label>Valor</mat-label>
+                         <input class="blue-input" required ngModel type="text" style="text-align: end;"
+                              class="example-right-align"
+                             matInput placeholder="ingrese el valor" formControlName="valor" />
+                         <!-- <span style="position: relative;top:-3px;" matPrefix>$&nbsp;</span>
+                                           <span style="position: relative; top:-3px;" matSuffix>.00</span> -->
+                     </mat-form-field>
+                  <!-- <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form"
+                      floatLabel="always" style="flex-grow: 2; width:100%">
+                        <input matInput type="number" placeholder="$" formControlName="valor" />
+                  </mat-form-field> -->
+                <!-- <mat-form-field [hidden]="!showOnlyName" appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                    style="flex-grow: 2; width:100%">
+                    <mat-label>Valor a pagar</mat-label>
+                    <input matInput type="number" placeholder="..." formControlName="valor" />
+                </mat-form-field> -->
+            </div>
+            <div fxLayout="row" style="margin: 1px;" fxLayoutGap="5px">
+                <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form"
+                    floatLabel="always" style="flex-grow: 2; width:100%">
+                    <mat-label>Sesiones</mat-label>
+                    <input matInput type="number" placeholder="..." formControlName="cantidad" />
+                </mat-form-field>
+                <mat-form-field [hidden]="showOnlyName" appearance="outline" class="mb-4 bold-form"
+                    floatLabel="always" style="flex-grow: 2; width:100%">
+                    <mat-label>Valor de sesiones</mat-label>
+                    <input matInput type="number" placeholder="..." formControlName="valor_sesion" />
+                </mat-form-field>
+            </div>
+             <!-- <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always"
+                 style="flex-grow: 2; width:100%">
+                 <mat-label>Procedimiento otros</mat-label>
+                 <input matInput type="text" placeholder="..." formControlName="otros" />
+             </mat-form-field> -->
+
+            <mat-form-field style="width: 100%;" appearance="outline" fxFlex class="blue bold-form" floatLabel="always">
+                <mat-label>Observacion</mat-label>
+                <textarea rows="4" matInput matAutosize matTextareaAutosize formControlName="obs"
+                    cdkAutosizeMinRows="9"></textarea>
+            </mat-form-field>
+        </form>
+        <div class="container" style="text-align: center;">
+        <button [ngStyle]="{'display': diente ? 'none' :''}" [hidden]="!showOnlyName" mat-flat-button
+          color="primary" class="ml-12" (click)="saveStatus()" (click)="saveEvolution()"
+          [disabled]="sending || !obs.valid">
+             Pagar
+         </button>
+         <button [ngStyle]="{'display': diente ? 'none' :''}" [hidden]="!showOnlyName" mat-flat-button
+             color="primary" class="ml-12" (click)="saveFinal()" (click)="saveEvolution()"
+             [disabled]="sending || !obs.valid">
+             Finalizar Procedimiento
+         </button>
+        </div>
+    </div>
+</div>
