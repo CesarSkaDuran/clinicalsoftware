@@ -1,4 +1,20 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+export interface RipsProviderConfig {
+  numDocumentoIdObligado: string | null;
+  codPrestador: string | null;
+  nextNumNota: string;
+}
+
+export interface RipsSavedReport {
+  id: number;
+  numNota: string;
+  nextNumNota: string;
+  payload: any;
+}
 
 export interface RipsServiceInput {
   type: 'consulta' | 'procedimiento';
@@ -51,6 +67,20 @@ export interface RipsSinFacturaInput {
 
 @Injectable({ providedIn: 'root' })
 export class RipsSinFacturaService {
+  constructor(private httpClient: HttpClient) {}
+
+  getProviderConfig(): Observable<RipsProviderConfig> {
+    return this.secureRequest(this.httpClient.get<RipsProviderConfig>('/v1/rips/config'));
+  }
+
+  saveProviderConfig(numDocumentoIdObligado: string, codPrestador: string): Observable<RipsProviderConfig> {
+    return this.secureRequest(this.httpClient.put<RipsProviderConfig>('/v1/rips/config', { numDocumentoIdObligado, codPrestador }));
+  }
+
+  saveReport(payload: any): Observable<RipsSavedReport> {
+    return this.secureRequest(this.httpClient.post<RipsSavedReport>('/v1/rips/reports', { payload }));
+  }
+
   build(input: RipsSinFacturaInput): any {
     return {
       numDocumentoIdObligado: input.numDocumentoIdObligado.trim(),
@@ -121,6 +151,13 @@ export class RipsSinFacturaService {
         };
       })
     };
+  }
+
+  private secureRequest<T>(request: Observable<T>): Observable<T> {
+    const localHttp = !environment.production && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(environment.serverUrl);
+    return environment.serverUrl.toLowerCase().startsWith('https://') || localHttp
+      ? request
+      : throwError(new Error('La API RIPS requiere una conexión HTTPS.'));
   }
 
   private formatDateTime(value: string): string {

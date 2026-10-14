@@ -32,6 +32,7 @@ import { AppointmentModalComponent } from 'src/app/modals/appointmentModal/appoi
 import icAdmin from '@iconify/icons-feather/dollar-sign';
 import { Router } from '@angular/router';
 import { CoreService } from 'src/app/core/core.service';
+import { ApexOptions } from 'src/@vex/components/chart/chart.component';
 
 @Component({
     selector: 'app-home',
@@ -88,6 +89,10 @@ export class HomeComponent implements OnInit {
     porcentaje: number;
     total_citas: number;
     loadingRecords2= false;
+    dashboard: any = null;
+    birthdaysToday: any[] = [];
+    barChart: ApexOptions = {};
+    donutChart: ApexOptions = {};
 
     constructor(
         public dialog: MatDialog,
@@ -145,57 +150,12 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    loadAppointment_2() {
-        console.log('loading records...');
-
-        this.loadingRecords = true;
-        // const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
-        const queryParams = `search:""`;
-        const queryProps =
-            'id,  name, company, value, date, time, status, type, email_confirmation, phone_confirmation, reason, patient_id, app_user_id, user_id, patient{id, name, identification, phone, status}, doctor{id ,name,}';
-        this.apiService.getAppointmentMonth(queryParams, queryProps).subscribe(
-            (response: any) => {
-                this.dataAppointment = response.data.appointmentMonth;
-                this.datos = this.dataAppointment = response.data.appointmentMonth;
-               
-                this.porcentaje = this.dataAppointment.reduce((
-                    acc,
-                    obj,
-                ) => acc + (obj.status == '1' ? obj.value = obj.value++ : obj.status == '3' ? obj.value = obj.value++ : 0 ), 0);
-                console.log("porcentaje: ", this.porcentaje);
-                
-                this.totalPatient = this.dataAppointment.reduce((
-                    acc,
-                    obj,
-                ) => acc + (obj.status == '2'? obj.patient.status++  : 0)  , 0
-                    );
-
-                this.total_virtual = this.dataAppointment.reduce((
-                    _acc,
-                    obj,
-                ) => _acc + (obj.status == '3' ? obj.status++ /3 : 0),
-                    0);
-
-                this.total_citas = this.dataAppointment.length;
-
-                    console.log( 'datos del dia', this.dataAppointment)
-            },
-            error => {
-                this.loadingRecords = false;
-                this._snackBar.open('Error.', null, {
-                    duration: 4000
-                });
-                console.log(error);
-            }
-        );
-    }
-
     userName() {
-        return this.coreService.currentUser.name;
+        return this.coreService.currentUser?.name;
     }
 
     doctorImage(){
-        return this.coreService.currentUser.doctor.avatar_url
+        return this.coreService.currentUser?.doctor?.avatar_url || '/assets/images/default-patient.png'
     }
     loadAppointmentPaginator() {
         this.loadingRecords2 = true;
@@ -210,7 +170,7 @@ export class HomeComponent implements OnInit {
         const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : '';
         const queryParams = `limit: ${this.limit}, offset: ${this.offset}, orderby: "${this.orderBy}", order: "${this.order}", ${searchText} ${date}  ${date2}`;
         const queryProps =
-            'data{id, name, doctorRemision{id,especializacion, nombre}, company, value, date, time, end_time, phone_confirmation, email_confirmation, reason, created_at, payment_type, status, doctor{name}, patient{identification, records{id,identification, patient{id, name, identification, civil_status, position, birth_date, address, phone, company, profile_url, partner_name, partner_profession, chat_id}, details{id, motive}, conclusion{id, diagnosis}, created_at}}}, total';
+            'data{id, name, doctorRemision{id,especializacion, nombre}, company, value, date, time, end_time, phone_confirmation, email_confirmation, reason, created_at, payment_type, status, doctor{name}, patient{identification, phone, records{id,identification, patient{id, name, identification, civil_status, position, birth_date, address, phone, company, profile_url, partner_name, partner_profession, chat_id}, details{id, motive}, conclusion{id, diagnosis}, created_at}}}, total';
 
         this.apiService.getAppointmentPagination(queryParams, queryProps).subscribe(
             (response: any) => {
@@ -307,8 +267,12 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.dataSource = new MatTableDataSource();
         this.loadAppointmentPaginator();
-        this.loadAppointment_2();
+        this.loadDashboard();
         this.loadRecords();
+        this.apiService.runDailyNotifications().subscribe({
+            complete: () => this.loadBirthdays(),
+            error: () => this.loadBirthdays()
+        });
     }
 
     sortRecords(event: MatSort): void {
@@ -358,7 +322,7 @@ export class HomeComponent implements OnInit {
             //this.loadRecords();
             this.loadAppointment()
             this.loadAppointmentPaginator();
-            this.loadAppointment_2();
+            this.loadDashboard();
             this.porcentaje;
             this.totalPatient;
             this.porcentaje;
@@ -384,7 +348,7 @@ export class HomeComponent implements OnInit {
             if (!result) return;
             this.loadAppointment();
             this.loadAppointmentPaginator();
-            this.loadAppointment_2();
+            this.loadDashboard();
             this.porcentaje;
             this.totalPatient;
             this.porcentaje;
@@ -407,7 +371,7 @@ export class HomeComponent implements OnInit {
             if (!result) return; 
             this.loadAppointment()
             this.loadAppointmentPaginator();
-            this.loadAppointment_2();
+            this.loadDashboard();
             this.porcentaje;
             this.totalPatient;
             this.porcentaje;
@@ -437,7 +401,7 @@ export class HomeComponent implements OnInit {
                     //      this.getPropect();
                     this.loadAppointment()
                     this.loadAppointmentPaginator();
-                    this.loadAppointment_2();
+                    this.loadDashboard();
                     this.porcentaje;
                     this.totalPatient;
                     this.porcentaje;
@@ -466,5 +430,60 @@ export class HomeComponent implements OnInit {
             case 4: return 'status-cancelled';
             default: return 'status-default';
         }
+    }
+
+    loadDashboard() {
+        this.apiService.getDashboardSummary().subscribe(
+            (response: any) => {
+                this.dashboard = response;
+                this.barChart = {
+                    series: [{ name: 'Citas', data: response.by_day }],
+                    chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'inherit' },
+                    colors: ['#3b82f6'],
+                    plotOptions: { bar: { endingShape: 'rounded', columnWidth: '55%' } },
+                    dataLabels: { enabled: false },
+                    xaxis: { categories: response.by_day.map((_: number, index: number) => index + 1) },
+                    grid: { borderColor: '#f1f5f9' }
+                };
+                this.donutChart = {
+                    series: [response.status.scheduled, response.status.pending, response.status.completed, response.status.cancelled],
+                    labels: ['Agendadas', 'Por confirmar', 'Finalizadas', 'Canceladas'],
+                    chart: { type: 'donut', height: 280, fontFamily: 'inherit' },
+                    colors: ['#3b82f6', '#f97316', '#22c55e', '#ef4444'],
+                    legend: { position: 'bottom' },
+                    dataLabels: { enabled: false },
+                    plotOptions: { pie: { donut: { size: '70%' } } }
+                };
+            },
+            error => console.log(error)
+        );
+    }
+
+    loadBirthdays() {
+        this.apiService.getBirthdaysToday().subscribe(
+            (response: any) => this.birthdaysToday = response,
+            error => console.log(error)
+        );
+    }
+
+    openBirthdayPatient(birthday: any) {
+        if (!birthday.record_identification) {
+            this._snackBar.open('Este paciente no tiene historia clínica a tu nombre.', null, { duration: 4000 });
+            return;
+        }
+        this.router.navigate(['/app/control', birthday.identification, birthday.record_identification]);
+    }
+
+    birthdayStatusLabel(status: string) {
+        switch (status) {
+            case 'sent': return 'Enviado';
+            case 'failed': return 'Falló';
+            case 'no_email': return 'Sin correo';
+            default: return 'Pendiente';
+        }
+    }
+
+    initials(name: string) {
+        return (name || '').split(' ').filter(part => part).slice(0, 2).map(part => part[0]).join('').toUpperCase();
     }
 }

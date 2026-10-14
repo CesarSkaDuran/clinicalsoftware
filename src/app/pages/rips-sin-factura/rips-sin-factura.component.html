@@ -6,10 +6,12 @@
 
   <vex-page-layout-content fxLayout="column">
     <div class="notice-card">
-      <strong>Versión inicial: generación local</strong>
-      <p>Este módulo no transmite datos al Ministerio ni guarda borradores en el servidor. El consecutivo de nota debe ser único y mantenerse bajo control del prestador. Verifica la elegibilidad para reportar RIPS sin factura y valida el archivo en el Mecanismo Único de Validación.</p>
-      <p>Los códigos de catálogos se capturan manualmente; el formulario comprueba campos requeridos, pero no confirma que CUPS, diagnósticos, sedes o valores estén vigentes en las tablas oficiales.</p>
+      <strong>Generación y almacenamiento del reporte</strong>
+      <p>El servidor conserva el JSON y asigna el consecutivo numNota por prestador. Cada prestador debe configurarse desde una sola cuenta autenticada; el archivo se descarga para carga manual y no se transmite al Ministerio ni genera factura electrónica.</p>
+      <p>Los selectores usan listas SISPRO incluidas en esta versión y no se actualizan automáticamente. CUPS, diagnósticos, municipio/país, prestador/sede y servicio habilitado se ingresan manualmente; confirma que estén vigentes. El MUV realiza la validación definitiva.</p>
     </div>
+    <div class="notice-card error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
+    <div class="notice-card success-message" *ngIf="successMessage" role="status">{{ successMessage }}</div>
 
     <form class="home-card rips-form" [formGroup]="form" (ngSubmit)="generateJson()">
       <section class="section-block">
@@ -29,11 +31,21 @@
             <mat-error *ngIf="form.get('numDocumentoIdObligado').hasError('maxlength')">Máximo 12 caracteres</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Consecutivo numNota</mat-label>
-            <input matInput formControlName="numNota" maxlength="30" autocomplete="off">
-            <mat-hint>Debe ser único y consecutivo para el prestador</mat-hint>
-            <mat-error *ngIf="form.get('numNota').hasError('required')">Campo obligatorio</mat-error>
+            <mat-label>Código de prestador/sede predeterminado</mat-label>
+            <input matInput formControlName="codPrestadorPredeterminado" maxlength="12" autocomplete="off">
+            <mat-hint>Se propone en cada servicio y puede ajustarse por sede</mat-hint>
+            <mat-error *ngIf="form.get('codPrestadorPredeterminado').hasError('maxlength')">Máximo 12 caracteres</mat-error>
           </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Próximo numNota</mat-label>
+            <input matInput formControlName="numNota" readonly>
+            <mat-hint>Informativo; el servidor asigna el valor al guardar el reporte</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="saveProviderConfig()" [disabled]="savingConfig">
+            {{ savingConfig ? 'Guardando configuración…' : 'Guardar configuración del obligado' }}
+          </button>
         </div>
       </section>
 
@@ -53,7 +65,9 @@
           <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Tipo de documento</mat-label>
-              <input matInput formControlName="tipoDocumentoIdentificacion" placeholder="Código del catálogo SISPRO">
+              <mat-select formControlName="tipoDocumentoIdentificacion">
+                <mat-option *ngFor="let option of patientDocumentOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+              </mat-select>
               <mat-error *ngIf="user.get('tipoDocumentoIdentificacion').hasError('required')">Campo obligatorio</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -63,7 +77,9 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Tipo de usuario</mat-label>
-              <input matInput formControlName="tipoUsuario" maxlength="2" placeholder="Código del catálogo SISPRO">
+              <mat-select formControlName="tipoUsuario">
+                <mat-option *ngFor="let option of userTypeOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+              </mat-select>
               <mat-error *ngIf="user.get('tipoUsuario').hasError('required')">Campo obligatorio</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -73,7 +89,9 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Sexo</mat-label>
-              <input matInput formControlName="codSexo" maxlength="2" placeholder="Código oficial">
+              <mat-select formControlName="codSexo">
+                <mat-option *ngFor="let option of sexOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+              </mat-select>
               <mat-error *ngIf="user.get('codSexo').hasError('required')">Campo obligatorio</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -87,12 +105,16 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Zona territorial</mat-label>
-              <input matInput formControlName="codZonaTerritorialResidencia" maxlength="2" placeholder="Código oficial">
+              <mat-select formControlName="codZonaTerritorialResidencia">
+                <mat-option *ngFor="let option of zoneOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+              </mat-select>
               <mat-error *ngIf="user.get('codZonaTerritorialResidencia').hasError('required')">Campo obligatorio</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Incapacidad</mat-label>
-              <input matInput formControlName="incapacidad" placeholder="Valor según Documento Técnico 1">
+              <mat-select formControlName="incapacidad">
+                <mat-option *ngFor="let option of incapacityOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+              </mat-select>
               <mat-error *ngIf="user.get('incapacidad').hasError('required')">Campo obligatorio</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -156,17 +178,23 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'procedimiento'">
                   <mat-label>Vía de ingreso</mat-label>
-                  <input matInput formControlName="viaIngresoServicioSalud" placeholder="Código oficial">
+                  <mat-select formControlName="viaIngresoServicioSalud">
+                    <mat-option *ngFor="let option of entryRouteOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('viaIngresoServicioSalud').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Modalidad de atención</mat-label>
-                  <input matInput formControlName="modalidadGrupoServicioTecSal" maxlength="2" placeholder="Código oficial">
+                  <mat-select formControlName="modalidadGrupoServicioTecSal">
+                    <mat-option *ngFor="let option of modalityOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('modalidadGrupoServicioTecSal').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Grupo de servicios</mat-label>
-                  <input matInput formControlName="grupoServicios" maxlength="2" placeholder="Código oficial">
+                  <mat-select formControlName="grupoServicios">
+                    <mat-option *ngFor="let option of serviceGroupOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('grupoServicios').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
@@ -176,12 +204,16 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Finalidad</mat-label>
-                  <input matInput formControlName="finalidadTecnologiaSalud" maxlength="2" placeholder="Código oficial">
+                  <mat-select formControlName="finalidadTecnologiaSalud">
+                    <mat-option *ngFor="let option of purposeOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('finalidadTecnologiaSalud').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'consulta'">
                   <mat-label>Causa/motivo de atención</mat-label>
-                  <input matInput formControlName="causaMotivoAtencion" maxlength="2" placeholder="Código oficial">
+                  <mat-select formControlName="causaMotivoAtencion">
+                    <mat-option *ngFor="let option of consultationCauseOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('causaMotivoAtencion').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
@@ -191,7 +223,9 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" *ngIf="service.get('type').value === 'consulta'">
                   <mat-label>Tipo de diagnóstico principal</mat-label>
-                  <input matInput formControlName="tipoDiagnosticoPrincipal" maxlength="2" placeholder="Código oficial">
+                  <mat-select formControlName="tipoDiagnosticoPrincipal">
+                    <mat-option *ngFor="let option of diagnosisTypeOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('tipoDiagnosticoPrincipal').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <ng-container *ngIf="service.get('type').value === 'consulta'">
@@ -205,7 +239,9 @@
                 </ng-container>
                 <mat-form-field appearance="outline">
                   <mat-label>Tipo de documento del profesional</mat-label>
-                  <input matInput formControlName="profesionalTipoDocumento" placeholder="Código oficial">
+                  <mat-select formControlName="profesionalTipoDocumento">
+                    <mat-option *ngFor="let option of professionalDocumentOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
                   <mat-error *ngIf="service.get('profesionalTipoDocumento').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
@@ -220,7 +256,10 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Concepto de recaudo</mat-label>
-                  <input matInput formControlName="conceptoRecaudo" maxlength="2" placeholder="Código oficial">
+                  <mat-select formControlName="conceptoRecaudo">
+                    <mat-option *ngFor="let option of collectionConceptOptions" [value]="option.code">{{ option.code }} — {{ option.label }}</mat-option>
+                  </mat-select>
+                  <mat-hint>El anticipo no se reporta como concepto de recaudo en este RIPS.</mat-hint>
                   <mat-error *ngIf="service.get('conceptoRecaudo').hasError('required')">Campo obligatorio</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
@@ -250,11 +289,11 @@
       <div class="section-title">
         <div>
           <h2>Vista previa del JSON</h2>
-          <p>Revisa los datos antes de descargar; la aceptación final depende del MUV.</p>
+          <p>Guarda el reporte en el servidor para asignar su numNota y descargar el archivo; la aceptación final depende del MUV.</p>
         </div>
-        <button mat-flat-button color="primary" type="button" (click)="downloadJson()">
-          <mat-icon>download</mat-icon>
-          Descargar archivo
+        <button mat-flat-button color="primary" type="button" (click)="saveAndDownload()" [disabled]="savingReport || !configSaved">
+          <mat-icon>save_alt</mat-icon>
+          {{ savingReport ? 'Guardando reporte…' : 'Guardar y descargar JSON' }}
         </button>
       </div>
       <pre>{{ jsonPreview }}</pre>

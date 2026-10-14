@@ -44,6 +44,18 @@
                 </button>
               </div>
             </div>
+            <div *ngIf="currentPatient && currentPatient.birthdayNotification" class="birthday-card"
+              fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon class="birthday-icon">cake</mat-icon>
+              <div fxFlex>
+                <strong>¡Hoy {{ currentPatient.name }} está de cumpleaños!</strong>
+                <div class="birthday-status">{{ birthdayStatusText(currentPatient.birthdayNotification) }}</div>
+              </div>
+              <button *ngIf="currentPatient.birthdayNotification !== 'sent'" mat-stroked-button color="primary"
+                (click)="sendBirthdayNow()" [disabled]="sendingBirthday">
+                Enviar felicitación
+              </button>
+            </div>
               <br>
               <div class="cont-a">
 

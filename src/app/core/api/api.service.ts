@@ -353,6 +353,22 @@ export class ApiService {
     return this.makeQuery(routes.createAppointment, params, properties);
   }
 
+  runDailyNotifications(): Observable<object> {
+    return this.httpClient.post('/v1/notifications/daily-run', {});
+  }
+
+  getBirthdaysToday(): Observable<object> {
+    return this.httpClient.get('/v1/notifications/birthdays-today');
+  }
+
+  getDashboardSummary(month?: string): Observable<object> {
+    return this.httpClient.get('/v1/dashboard/summary', { params: month ? { month } : {} });
+  }
+
+  sendBirthdayNotification(patientId: number): Observable<object> {
+    return this.httpClient.post(`/v1/notifications/birthday/${patientId}`, {});
+  }
+
   saveMultimedia(params: string, properties: string): Observable<object> {
     return this.makeQuery(routes.saveMultimedia, params, properties);
   }

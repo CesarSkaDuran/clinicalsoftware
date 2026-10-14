@@ -22,6 +22,7 @@ import { HomeComponent } from './home.component';
 import { HomeRoutingModule } from './home-routing.module';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
+import { ChartModule } from 'src/@vex/components/chart/chart.module';
 @NgModule({
     declarations: [HomeComponent],
     imports: [
@@ -46,7 +47,8 @@ import { MatCardModule } from '@angular/material/card';
         MatMenuModule,
         // KeyboardShortcutsModule.forRoot(),
         HomeRoutingModule,
-        MatCardModule
+        MatCardModule,
+        ChartModule
     ],
     providers: [
     ]

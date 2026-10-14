@@ -141,6 +141,25 @@ export class AppointmentModalComponent implements OnInit, AfterViewInit, OnDestr
         this.close();
     }
 
+    sendWhatsAppReminder() {
+        const appointment = this.data.appointment;
+        const patient = appointment ? appointment.patient : null;
+        const digits = patient && patient.phone ? String(patient.phone).replace(/\D/g, '') : '';
+
+        if (!digits) {
+            this.snackBar.open('El paciente no tiene teléfono registrado.', null, {
+                duration: 4000
+            });
+            return;
+        }
+
+        const number = digits.indexOf('57') === 0 ? digits : `57${digits}`;
+        const date = appointment.date ? moment(appointment.date).format('DD/MM/YYYY') : '';
+        const message = `Hola ${appointment.name}, te recordamos tu cita odontológica el ${date} a las ${appointment.time}. Por favor confirma tu asistencia.`;
+
+        window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
     save() {
         this.sending = true;
         const data = this.obs.value;

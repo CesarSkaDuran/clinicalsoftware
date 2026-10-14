@@ -1,10 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { RipsSinFacturaService } from './rips-sin-factura.service';
 
 describe('RipsSinFacturaService', () => {
   let service: RipsSinFacturaService;
 
   beforeEach(() => {
-    service = new RipsSinFacturaService();
+    service = new RipsSinFacturaService({} as HttpClient);
   });
 
   it('builds a no-invoice payload with RS note and per-user service consecutive', () => {

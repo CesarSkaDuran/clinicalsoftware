@@ -548,3 +548,24 @@ figure:hover>figcaption {
      border-right: 0px;
      // background-color: yellow;
  }
+.birthday-card {
+    background: linear-gradient(90deg, #16213e 0%, #1f3a66 100%);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.birthday-card .birthday-icon {
+    color: #f4978e;
+    font-size: 34px;
+    width: 34px;
+    height: 34px;
+    margin-right: 14px;
+}
+
+.birthday-card .birthday-status {
+    color: #c8d3e0;
+    font-size: 13px;
+    margin-top: 4px;
+}

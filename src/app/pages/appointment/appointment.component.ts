@@ -198,7 +198,7 @@ export class AppointmentComponent implements OnInit, AfterViewInit {
     const searchText = this.filters.value.search !== '' ? `search: "${this.filters.value.search}",` : `search: " ",`;
     const queryParams = `${searchText}`;
     const queryProps =
-      'id, name, doctorRemision{id, nombre, especializacion}, company, value, date, time, end_time, phone_confirmation, email_confirmation, reason, payment_type, status, doctor{name}, patient{identification, records{id,identification, patient{id, name, identification, civil_status, position, birth_date, address, phone, company, profile_url, partner_name, partner_profession, chat_id}, details{id, motive}, conclusion{id, diagnosis}, created_at}}';
+      'id, name, doctorRemision{id, nombre, especializacion}, company, value, date, time, end_time, phone_confirmation, email_confirmation, reason, payment_type, status, doctor{name}, patient{identification, name, phone, records{id,identification, patient{id, name, identification, civil_status, position, birth_date, address, phone, company, profile_url, partner_name, partner_profession, chat_id}, details{id, motive}, conclusion{id, diagnosis}, created_at}}';
 
     this.apiService.getAppointments(queryParams, queryProps).subscribe(
       (response: any) => {

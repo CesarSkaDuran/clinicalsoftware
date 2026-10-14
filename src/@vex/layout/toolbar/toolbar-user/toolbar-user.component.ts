@@ -51,6 +51,6 @@ export class ToolbarUserComponent implements OnInit {
   }
 
   userName() {
-    return this.coreService.currentUser.fullName();
+    return this.coreService.currentUser?.fullName();
   }
 }

@@ -4,7 +4,7 @@
     <div class="welcome-container">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
         <div class="avatar-glow">
-          <img class="userImage" [src]="doctorImage()" alt="Doctor" (error)="$event.target.src = '/assets/img/default-patient.png'">
+          <img class="userImage" [src]="doctorImage()" alt="Doctor" (error)="$event.target.src = '/assets/images/default-patient.png'">
         </div>
         <div>
           <h1 class="welcome-title">
@@ -29,18 +29,18 @@
     </div>
   </div>
 
-  <!-- Stats Cards -->
   <vex-page-layout-content class="container-fluid" @stagger>
+    <!-- Stats Cards -->
     <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px" class="stats-grid">
       <div fxFlex="25" fxFlex.xs="100" fxFlex.sm="50">
         <div class="stat-card stat-blue">
           <div class="stat-icon">
-            <mat-icon>event_available</mat-icon>
+            <mat-icon>today</mat-icon>
           </div>
           <div class="stat-content">
-            <h3 class="stat-label">Citas Realizadas</h3>
-            <span class="stat-number">{{total_virtual}}</span>
-            <p class="stat-detail">Detalles</p>
+            <h3 class="stat-label">Citas de hoy</h3>
+            <span class="stat-number">{{dashboard?.today_count || 0}}</span>
+            <p class="stat-detail">Agenda del día</p>
           </div>
         </div>
       </div>
@@ -51,9 +51,9 @@
             <mat-icon>pending_actions</mat-icon>
           </div>
           <div class="stat-content">
-            <h3 class="stat-label">Citas Pend. Hoy</h3>
-            <span class="stat-number">{{totalPatient}}</span>
-            <p class="stat-detail">Detalles</p>
+            <h3 class="stat-label">Por confirmar</h3>
+            <span class="stat-number">{{dashboard?.status?.pending || 0}}</span>
+            <p class="stat-detail">Citas del mes</p>
           </div>
         </div>
       </div>
@@ -61,12 +61,12 @@
       <div fxFlex="25" fxFlex.xs="100" fxFlex.sm="50">
         <div class="stat-card stat-teal">
           <div class="stat-icon">
-            <mat-icon>calendar_month</mat-icon>
+            <mat-icon>task_alt</mat-icon>
           </div>
           <div class="stat-content">
-            <h3 class="stat-label">Citas Totales</h3>
-            <span class="stat-number">{{total_citas}}</span>
-            <p class="stat-detail">Detalles</p>
+            <h3 class="stat-label">Finalizadas</h3>
+            <span class="stat-number">{{dashboard?.status?.completed || 0}}</span>
+            <p class="stat-detail">Citas del mes</p>
           </div>
         </div>
       </div>
@@ -79,119 +79,168 @@
           <div class="stat-content">
             <h3 class="stat-label">Recaudado Hoy</h3>
             <span class="stat-number">{{totalIncome | currency:'USD': 'symbol': '1.0'}}</span>
-            <p class="stat-detail">Detalles</p>
+            <p class="stat-detail">Cuentas de cobro de hoy</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Appointments Table -->
-    <div class="data-card" @stagger>
-      <div class="data-card-header">
-        <h2 class="data-card-title">Citas próximas</h2>
-      </div>
-
-      <div class="table-filters" [formGroup]="filters" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <mat-form-field appearance="outline" floatLabel="always" class="filter-field">
-          <mat-label>Paciente</mat-label>
-          <input matInput (keyup)="searchKeyUp($event)" #search placeholder="Nombre del Paciente..." formControlName="search" />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-        <mat-form-field appearance="outline" floatLabel="always" class="filter-field">
-          <mat-label>Fecha Inicial</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha" autocomplete="off" (dateChange)="dateChange($event)" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-
-      <div class="table-container">
-        <table [dataSource]="dataDoctor" class="w-full modern-table" mat-table matSort>
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
-            <td mat-cell *matCellDef="let row">
-              <span class="status-badge" [ngClass]="getStatusClass(row.status)">
-                {{row.status == 1 ? 'Agendada' : row.status == 2 ? 'Por confirmar' : row.status == 3 ? 'Finalizada' : row.status == 4 ? 'Cancelada' : 'Otro'}}
-              </span>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="patient">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Paciente</th>
-            <td mat-cell *matCellDef="let row">
-              <div class="patient-name">{{row.name}}</div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="phone">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
-            <td mat-cell *matCellDef="let row">{{ row.phone_confirmation }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Reservación</th>
-            <td mat-cell *matCellDef="let row">{{row.date}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="date_1">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Solicitud</th>
-            <td mat-cell *matCellDef="let row">{{row.created_at | date:"yyyy-MM-dd"}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="time">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
-            <td mat-cell *matCellDef="let row">{{row.time}}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="service">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Motivo</th>
-            <td mat-cell *matCellDef="let row">
-              <span class="truncate-text">{{ row.reason }}</span>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="doctor">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Especialista</th>
-            <td mat-cell *matCellDef="let row">
-              <span class="truncate-text">{{ row?.doctorRemision?.nombre }} {{ row?.doctorRemision?.especializacion }}</span>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="options">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let row" class="actions-cell">
-              <button (click)="goToRecord(row)" mat-icon-button class="action-btn action-blue" [ngStyle]="{'display': row.status === 3 || row.status === 4 || row.status === 2 ? 'none' : '' }">
-                <mat-icon>login</mat-icon>
-              </button>
-              <button *ngIf="row.status !== 1" mat-icon-button class="action-btn action-dark">
-                <mat-icon>login</mat-icon>
-              </button>
-              <button (click)="openAppointmentModal(row)" mat-icon-button class="action-btn action-view">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button class="action-btn action-delete" (click)="delete(row)">
-                <mat-icon [icIcon]="baselineDeleteForever"></mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
-        </table>
-      </div>
-
-      <div [hidden]="data.length > 0" class="empty-state">
-        <div [hidden]="!loadingRecords2" fxLayout="column" fxLayoutAlign="center center">
-          <mat-spinner diameter="32"></mat-spinner>
-          <span>CARGANDO</span>
+    <!-- Charts -->
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px" class="charts-grid">
+      <div fxFlex="60" fxFlex.xs="100" fxFlex.sm="100" class="data-card chart-card">
+        <div class="data-card-header">
+          <h2 class="data-card-title">Citas del mes</h2>
+          <p class="data-card-subtitle">Número de citas por día</p>
         </div>
-        <div [hidden]="loadingRecords2 || data.length > 0" fxLayout="column" fxLayoutAlign="center center">
-          <mat-icon class="empty-icon">event_busy</mat-icon>
-          <span class="empty-title">NO HAY CITAS PROGRAMADAS</span>
+        <div class="chart-body">
+          <vex-chart *ngIf="dashboard" [options]="barChart"></vex-chart>
         </div>
       </div>
 
-      <mat-paginator [length]="resultsLength" (page)="pageChange($event)" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" showFirstLastButtons class="modern-paginator"></mat-paginator>
+      <div fxFlex="40" fxFlex.xs="100" fxFlex.sm="100" class="data-card chart-card">
+        <div class="data-card-header">
+          <h2 class="data-card-title">Estado de citas</h2>
+          <p class="data-card-subtitle">Distribución del mes</p>
+        </div>
+        <div class="chart-body">
+          <vex-chart *ngIf="dashboard" [options]="donutChart"></vex-chart>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px" class="bottom-grid">
+      <!-- Appointments Table -->
+      <div fxFlex="70" fxFlex.xs="100" fxFlex.sm="100" class="data-card" @stagger>
+        <div class="data-card-header">
+          <h2 class="data-card-title">Citas próximas</h2>
+        </div>
+
+        <div class="table-filters" [formGroup]="filters" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+          <mat-form-field appearance="outline" floatLabel="always" class="filter-field">
+            <mat-label>Paciente</mat-label>
+            <input matInput (keyup)="searchKeyUp($event)" #search placeholder="Nombre del Paciente..." formControlName="search" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline" floatLabel="always" class="filter-field">
+            <mat-label>Fecha Inicial</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Rango de fecha" autocomplete="off" (dateChange)="dateChange($event)" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="table-container">
+          <table [dataSource]="dataDoctor" class="w-full modern-table" mat-table matSort>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="status-badge" [ngClass]="getStatusClass(row.status)">
+                  {{row.status == 1 ? 'Agendada' : row.status == 2 ? 'Por confirmar' : row.status == 3 ? 'Finalizada' : row.status == 4 ? 'Cancelada' : 'Otro'}}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="patient">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Paciente</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="patient-name">{{row.name}}</div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
+              <td mat-cell *matCellDef="let row">{{ row.phone_confirmation }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Reservación</th>
+              <td mat-cell *matCellDef="let row">{{row.date}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="date_1">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Solicitud</th>
+              <td mat-cell *matCellDef="let row">{{row.created_at | date:"yyyy-MM-dd"}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="time">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+              <td mat-cell *matCellDef="let row">{{row.time}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="service">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Motivo</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="truncate-text">{{ row.reason }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="doctor">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Especialista</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="truncate-text">{{ row?.doctorRemision?.nombre }} {{ row?.doctorRemision?.especializacion }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="options">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let row" class="actions-cell">
+                <button (click)="goToRecord(row)" mat-icon-button class="action-btn action-blue" [ngStyle]="{'display': row.status === 3 || row.status === 4 || row.status === 2 ? 'none' : '' }">
+                  <mat-icon>login</mat-icon>
+                </button>
+                <button *ngIf="row.status !== 1" mat-icon-button class="action-btn action-dark">
+                  <mat-icon>login</mat-icon>
+                </button>
+                <button (click)="openAppointmentModal(row)" mat-icon-button class="action-btn action-view">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn action-delete" (click)="delete(row)">
+                  <mat-icon [icIcon]="baselineDeleteForever"></mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
+          </table>
+        </div>
+
+        <div [hidden]="data.length > 0" class="empty-state">
+          <div [hidden]="!loadingRecords2" fxLayout="column" fxLayoutAlign="center center">
+            <mat-spinner diameter="32"></mat-spinner>
+            <span>CARGANDO</span>
+          </div>
+          <div [hidden]="loadingRecords2 || data.length > 0" fxLayout="column" fxLayoutAlign="center center">
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+            <span class="empty-title">NO HAY CITAS PROGRAMADAS</span>
+          </div>
+        </div>
+
+        <mat-paginator [length]="resultsLength" (page)="pageChange($event)" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" showFirstLastButtons class="modern-paginator"></mat-paginator>
+      </div>
+
+      <!-- Birthdays Today -->
+      <div fxFlex="30" fxFlex.xs="100" fxFlex.sm="100" class="data-card birthday-card">
+        <div class="data-card-header">
+          <h2 class="data-card-title">Cumpleaños de hoy</h2>
+          <p class="data-card-subtitle">Toca un paciente para abrir su ficha</p>
+        </div>
+
+        <div class="birthday-list" *ngIf="birthdaysToday.length > 0">
+          <div *ngFor="let birthday of birthdaysToday" class="birthday-item" [class.birthday-item-disabled]="!birthday.record_identification" (click)="openBirthdayPatient(birthday)">
+            <div class="birthday-avatar">{{initials(birthday.name)}}</div>
+            <div class="birthday-info">
+              <div class="birthday-name">{{birthday.name}}</div>
+              <div class="birthday-meta">Cumple {{birthday.age}} años</div>
+            </div>
+            <span class="status-badge" [ngClass]="'birthday-status-' + birthday.status">{{birthdayStatusLabel(birthday.status)}}</span>
+          </div>
+        </div>
+
+        <div *ngIf="birthdaysToday.length === 0" class="empty-state">
+          <mat-icon class="empty-icon">cake</mat-icon>
+          <span class="empty-title">Hoy no hay cumpleaños</span>
+        </div>
+      </div>
     </div>
   </vex-page-layout-content>
 </vex-page-layout>

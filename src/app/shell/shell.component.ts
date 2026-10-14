@@ -46,7 +46,7 @@ export class ShellComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.layoutService.configpanelOpen$.pipe(
             untilDestroyed(this)
-        ).subscribe(open => open ? this.configpanel.open() : this.configpanel.close());
+        ).subscribe(open => open ? this.configpanel?.open() : this.configpanel?.close());
 
         // console.log('shell init');
         const userParams = 'id, name, last_name, chat_id, doctor{id, chat_id, name, avatar_url, in_place_price, virtual_price}';

@@ -22,8 +22,11 @@
         <h4 class="mb-2">Paciente</h4>
         <div fxLayout="row" fxLayoutAlign="start center">
           <h3 fxFlex>{{data.appointment?.name}}</h3>
+          <button mat-stroked-button color="primary" (click)="sendWhatsAppReminder()" class="mr-2">
+            <img src="/assets/images/ws-btn.png" alt="WhatsApp" width="18px" class="mr-1"> WhatsApp
+          </button>
           <button mat-stroked-button color="primary" (click)="openPatientModal(data.appointment)">Detalles</button>
-        </div> 
+        </div>
       </div>
       <mat-form-field appearance="outline" class="mb-4 bold-form" floatLabel="always">
         <mat-label>Estado</mat-label>

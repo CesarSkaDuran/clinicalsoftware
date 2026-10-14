@@ -158,6 +158,7 @@ export class ControlComponent implements OnInit, AfterViewInit, OnDestroy {
     displayedColumns: string[] = ['date_1', 'doctor', 'service',  'status', 'options'];
     currentRecord: any = null;
     currentPatient: Patient;
+    sendingBirthday = false;
     filters = new FormGroup({
         search: new FormControl('', []),
         date: new FormControl('', []),
@@ -275,6 +276,10 @@ export class ControlComponent implements OnInit, AfterViewInit, OnDestroy {
         if (record.patient) {
             this.currentPatient = record.patient;
 
+            if (this.currentPatient && this.currentPatient.birthdayNotification === 'pending') {
+                this.sendBirthdayNow();
+            }
+
             if (this.currentPatient) {
                 this.patient.setValue({
                     id: this.currentPatient.id ? this.currentPatient.id : '',
@@ -335,7 +340,7 @@ export class ControlComponent implements OnInit, AfterViewInit, OnDestroy {
         const queryParams = `patient_id:"${patientId}"`;
         const queryProps =
             // tslint:disable-next-line:max-line-length
-            'id, status, identification, user{id, name} popq{id, popq_Aa, popq_Ba, popq_C, popq_gh, popq_pb, popq_tvl, popq_Ap, popq_Bp, popq_D}, diagnoses{ id, diagnose{ id, cod_four, des_four,} },   procedures{ id, procedure{ id, code, description,} },  patient{id, name, identification, civil_status, position, sex, TipoDocumento, birth_date, phone, address, grupo_sanguineo, arl, pension,TipoDocumento, company, email, partner_name, arl, eps, pension, partner_profession, profile_url, chat_id}, details{id, motive, menarche, cycles, record_fur, record_g, record_p, record_v, record_a, record_pp, record_up, record_prs, record_fpp, amenorrhea}, physical{id,physical_ta, physical_fc, weight, height, head, neck, thorax, pregnancy, exams}, evolutions{id, date, details, rejuv, mona}, observations{id, description}, pregnancies{id,date,description}, coombs{id,date,description}, htos{id,date,description}, hbs{id,date,description}, cits{id,date,description}, vaccines{id,date,description}, citologies{id,date,description}, laboratory{id, patient_group, patient_rh, partner_group, partner_rh}, labor{id, date, time, labor_ta, labor_fcf, membranes, presentation, observations}, birth{id, date, time, type, episiotomy, alum, blood_loss, oxytocic, anesthesia, sex, weight, height, size, observations}, medicines{id, medicine{id,name,atc_code,active,administration,pos,cum}, dose, measure, frequency, duration, quantity, administration}, conclusion{id, surgical, pathological, notes, diagnosis, tests, behavior, process, pharmacological, family, allergies, diagnostic, diagnostic_type, toxicologist, occupational, external_cause, purpose, procedure_id, current_illness, authorization_number, rel_diagnostic{id,cod_four,des_four}, rel_procedure{id,code,description}}, multimedias{id,name,description,url,type,status,created_at}, created_at';
+            'id, status, identification, user{id, name} popq{id, popq_Aa, popq_Ba, popq_C, popq_gh, popq_pb, popq_tvl, popq_Ap, popq_Bp, popq_D}, diagnoses{ id, diagnose{ id, cod_four, des_four,} },   procedures{ id, procedure{ id, code, description,} },  patient{id, name, identification, civil_status, position, sex, TipoDocumento, birth_date, phone, address, grupo_sanguineo, arl, pension,TipoDocumento, company, email, partner_name, arl, eps, pension, partner_profession, profile_url, chat_id, birthdayNotification}, details{id, motive, menarche, cycles, record_fur, record_g, record_p, record_v, record_a, record_pp, record_up, record_prs, record_fpp, amenorrhea}, physical{id,physical_ta, physical_fc, weight, height, head, neck, thorax, pregnancy, exams}, evolutions{id, date, details, rejuv, mona}, observations{id, description}, pregnancies{id,date,description}, coombs{id,date,description}, htos{id,date,description}, hbs{id,date,description}, cits{id,date,description}, vaccines{id,date,description}, citologies{id,date,description}, laboratory{id, patient_group, patient_rh, partner_group, partner_rh}, labor{id, date, time, labor_ta, labor_fcf, membranes, presentation, observations}, birth{id, date, time, type, episiotomy, alum, blood_loss, oxytocic, anesthesia, sex, weight, height, size, observations}, medicines{id, medicine{id,name,atc_code,active,administration,pos,cum}, dose, measure, frequency, duration, quantity, administration}, conclusion{id, surgical, pathological, notes, diagnosis, tests, behavior, process, pharmacological, family, allergies, diagnostic, diagnostic_type, toxicologist, occupational, external_cause, purpose, procedure_id, current_illness, authorization_number, rel_diagnostic{id,cod_four,des_four}, rel_procedure{id,code,description}}, multimedias{id,name,description,url,type,status,created_at}, created_at';
 
         this.apiService.getRecordControl(queryParams, queryProps).subscribe(
             (result: any) => {
@@ -395,7 +400,7 @@ export class ControlComponent implements OnInit, AfterViewInit, OnDestroy {
         const queryParams = `id: "${id}"`;
         const queryProps =
             // tslint:disable-next-line:max-line-length
-            'id,identification, popq{id, popq_Aa, popq_Ba, popq_C, popq_gh, popq_pb, popq_tvl, popq_Ap, popq_Bp, popq_D}, diagnoses{ id, diagnose{ id, cod_four, des_four,} },   procedures{ id, procedure{ id, code, description,} },  patient{id, name, identification, civil_status, position, sex, TipoDocumento, birth_date, phone, address,  grupo_sanguineo, arl, pension, company, email, partner_name, arl, eps, pension, partner_profession, profile_url, chat_id}, details{id, motive, menarche, cycles, record_fur, record_g, record_p, record_v, record_a, record_pp, record_up, record_prs, record_fpp, amenorrhea}, physical{id,physical_ta, physical_fc, weight, height, head, neck, thorax, pregnancy, exams}, evolutions{id, date, details, rejuv, mona}, observations{id, description}, pregnancies{id,date,description}, coombs{id,date,description}, htos{id,date,description}, hbs{id,date,description}, cits{id,date,description}, vaccines{id,date,description}, citologies{id,date,description}, laboratory{id, patient_group, patient_rh, partner_group, partner_rh}, labor{id, date, time, labor_ta, labor_fcf, membranes, presentation, observations}, birth{id, date, time, type, episiotomy, alum, blood_loss, oxytocic, anesthesia, sex, weight, height, size, observations}, medicines{id, medicine{id,name,atc_code,active,administration,pos,cum}, dose, measure, frequency, duration, quantity, administration}, conclusion{id, surgical, pathological, notes, diagnosis, tests, behavior, process, pharmacological, family, allergies, diagnostic, diagnostic_type, toxicologist, occupational, external_cause, purpose, procedure_id, current_illness, authorization_number, rel_diagnostic{id,cod_four,des_four}, rel_procedure{id,code,description}}, multimedias{id,name,description,url,type,status,created_at}, created_at';
+            'id,identification, popq{id, popq_Aa, popq_Ba, popq_C, popq_gh, popq_pb, popq_tvl, popq_Ap, popq_Bp, popq_D}, diagnoses{ id, diagnose{ id, cod_four, des_four,} },   procedures{ id, procedure{ id, code, description,} },  patient{id, name, identification, civil_status, position, sex, TipoDocumento, birth_date, phone, address,  grupo_sanguineo, arl, pension, company, email, partner_name, arl, eps, pension, partner_profession, profile_url, chat_id, birthdayNotification}, details{id, motive, menarche, cycles, record_fur, record_g, record_p, record_v, record_a, record_pp, record_up, record_prs, record_fpp, amenorrhea}, physical{id,physical_ta, physical_fc, weight, height, head, neck, thorax, pregnancy, exams}, evolutions{id, date, details, rejuv, mona}, observations{id, description}, pregnancies{id,date,description}, coombs{id,date,description}, htos{id,date,description}, hbs{id,date,description}, cits{id,date,description}, vaccines{id,date,description}, citologies{id,date,description}, laboratory{id, patient_group, patient_rh, partner_group, partner_rh}, labor{id, date, time, labor_ta, labor_fcf, membranes, presentation, observations}, birth{id, date, time, type, episiotomy, alum, blood_loss, oxytocic, anesthesia, sex, weight, height, size, observations}, medicines{id, medicine{id,name,atc_code,active,administration,pos,cum}, dose, measure, frequency, duration, quantity, administration}, conclusion{id, surgical, pathological, notes, diagnosis, tests, behavior, process, pharmacological, family, allergies, diagnostic, diagnostic_type, toxicologist, occupational, external_cause, purpose, procedure_id, current_illness, authorization_number, rel_diagnostic{id,cod_four,des_four}, rel_procedure{id,code,description}}, multimedias{id,name,description,url,type,status,created_at}, created_at';
 
         this.apiService.getRecord(queryParams, queryProps).subscribe(
             (result: any) => {
@@ -498,6 +503,39 @@ export class ControlComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     ageFromDate(date: string) {
         return moment().diff(moment(date), 'years');
+    }
+    birthdayStatusText(status: string) {
+        switch (status) {
+            case 'sent':
+                return 'Felicitación de cumpleaños enviada al correo del paciente.';
+            case 'failed':
+                return 'El envío de la felicitación falló. Puedes reintentarlo.';
+            default:
+                return 'La felicitación de cumpleaños aún no se ha enviado.';
+        }
+    }
+    sendBirthdayNow() {
+        if (!this.currentPatient || this.sendingBirthday) {
+            return;
+        }
+
+        this.sendingBirthday = true;
+
+        this.apiService.sendBirthdayNotification(this.currentPatient.id).subscribe(
+            () => {
+                this.sendingBirthday = false;
+                this.currentPatient.birthdayNotification = 'sent';
+                this.snackBar.open('Felicitación enviada', null, {
+                    duration: 4000
+                });
+            },
+            () => {
+                this.sendingBirthday = false;
+                this.snackBar.open('Error al enviar la felicitación.', null, {
+                    duration: 4000
+                });
+            }
+        );
     }
     toPrint(user: any = null) {
         const url = `/#/records/print/${user.identification}`;
